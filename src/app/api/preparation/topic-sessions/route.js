@@ -2,9 +2,11 @@ import { connectDB } from "@/config/database";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { isValidTaskDate } from "@/lib/task-api";
 import {
+  parseObjectId,
   topicApiError,
   validateTopicSessionPayload,
 } from "@/lib/topic-api";
+import TaskTracker from "@/models/task.model";
 import Topic from "@/models/Topic.model";
 import TopicSession from "@/models/TopicSession.model";
 
@@ -22,11 +24,17 @@ export async function GET(request) {
     const search = new URL(request.url).searchParams;
     const topic = search.get("topic");
     const section = search.get("section");
+    const relatedTaskId = search.get("relatedTaskId");
     const from = search.get("from");
     const to = search.get("to");
     const limit = Math.min(1000, Math.max(1, Number(search.get("limit")) || 500));
 
+    if (relatedTaskId && !parseObjectId(relatedTaskId)) {
+      return Response.json({ error: "Invalid related task ID" }, { status: 400 });
+    }
+
     const filter = { userId: user._id };
+    if (relatedTaskId) filter.relatedTaskId = relatedTaskId;
     if (section && section !== "All") {
       filter.section = section;
     }
@@ -71,11 +79,53 @@ export async function POST(request) {
     }
 
     await connectDB();
-    const session = new TopicSession({
-      ...validation.payload,
-      userId: user._id,
-    });
-    await session.save();
+    const relatedTaskId = validation.payload.relatedTaskId;
+    if (relatedTaskId) {
+      const task = await TaskTracker.exists({ _id: relatedTaskId, userId: user._id });
+      if (!task) {
+        return Response.json({ error: "Related task not found" }, { status: 404 });
+      }
+    }
+
+    let session;
+    let status = 201;
+    if (relatedTaskId) {
+      session = await TopicSession.findOne({
+        userId: user._id,
+        relatedTaskId,
+      });
+      if (session) {
+        for (const [field, value] of Object.entries(validation.payload)) {
+          session.set(field, value);
+        }
+        await session.save();
+        status = 200;
+      } else {
+        try {
+          session = await TopicSession.create({
+            ...validation.payload,
+            userId: user._id,
+          });
+        } catch (error) {
+          if (error?.code !== 11000) throw error;
+          session = await TopicSession.findOne({
+            userId: user._id,
+            relatedTaskId,
+          });
+          if (!session) throw error;
+          for (const [field, value] of Object.entries(validation.payload)) {
+            session.set(field, value);
+          }
+          await session.save();
+          status = 200;
+        }
+      }
+    } else {
+      session = await TopicSession.create({
+        ...validation.payload,
+        userId: user._id,
+      });
+    }
 
     // Optionally sync lastPracticed and nextReview with Topic if matching topic exists
     try {
@@ -102,7 +152,7 @@ export async function POST(request) {
       console.warn("Topic sync after session warning:", syncErr);
     }
 
-    return Response.json({ session }, { status: 201 });
+    return Response.json({ session }, { status });
   } catch (error) {
     return topicApiError(error);
   }

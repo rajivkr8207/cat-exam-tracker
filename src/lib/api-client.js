@@ -24,16 +24,33 @@ async function parseResponse(response) {
   return result;
 }
 
+const API_TIMEOUT_MS = 15_000; // 15 seconds
+
 async function fetchJson(path, options) {
-  const response = await fetch(path, {
-    ...options,
-    credentials: "same-origin",
-    headers: {
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
-      ...options.headers,
-    },
-  });
-  return parseResponse(response);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(path, {
+      ...options,
+      credentials: "same-origin",
+      headers: {
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...options.headers,
+      },
+      signal: options.signal ?? controller.signal,
+    });
+    return parseResponse(response);
+  } catch (error) {
+    if (error.name === "AbortError") {
+      const timeoutError = new Error("Request timed out. Please check your connection and try again.");
+      timeoutError.status = 408;
+      throw timeoutError;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 function refreshSession() {

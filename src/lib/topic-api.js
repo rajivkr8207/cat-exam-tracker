@@ -285,7 +285,7 @@ export function validateTopicSessionPayload(body, { partial = false } = {}) {
       payload.minutes = undefined;
     } else {
       const m = Number(body.minutes);
-      if (isNaN(m) || m < 0) {
+      if (!Number.isFinite(m) || m < 0) {
         return { error: "minutes must be a non-negative number" };
       }
       payload.minutes = m;

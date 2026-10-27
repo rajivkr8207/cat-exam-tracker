@@ -5,6 +5,7 @@ import {
   topicApiError,
   validateTopicSessionPayload,
 } from "@/lib/topic-api";
+import TaskTracker from "@/models/task.model";
 import TopicSession from "@/models/TopicSession.model";
 
 async function getSessionId(context) {
@@ -65,6 +66,16 @@ export async function PATCH(request, context) {
     }
 
     await connectDB();
+    if (validation.payload.relatedTaskId) {
+      const task = await TaskTracker.exists({
+        _id: validation.payload.relatedTaskId,
+        userId: user._id,
+      });
+      if (!task) {
+        return Response.json({ error: "Related task not found" }, { status: 404 });
+      }
+    }
+
     const session = await TopicSession.findOne({
       _id: id,
       userId: user._id,

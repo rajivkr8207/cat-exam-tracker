@@ -61,6 +61,19 @@ const FIELD_NAMES = [
   "actual",
   "notes",
 ];
+const DEFAULT_TASK_PRACTICE = {
+  enabled: false,
+  topic: "",
+  section: "VARC",
+  date: "",
+  total: "",
+  attempted: "",
+  correct: "",
+  minutes: "",
+  mistake: "",
+  revisionDate: "",
+  notes: "",
+};
 
 function subscribeToTheme(callback) {
   window.addEventListener("storage", callback);
@@ -169,6 +182,7 @@ function DailyDiary({ user, onSignOut }) {
   const [selectedDate, setSelectedDate] = useState(() => localDateString());
   const [tasks, setTasks] = useState([]);
   const [form, setForm] = useState(DEFAULT_FORM);
+  const [taskPractice, setTaskPractice] = useState(DEFAULT_TASK_PRACTICE);
   const [editingId, setEditingId] = useState("");
   const [sectionFilter, setSectionFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -308,12 +322,21 @@ function DailyDiary({ user, onSignOut }) {
 
   function resetForm() {
     setForm(DEFAULT_FORM);
+    setTaskPractice(DEFAULT_TASK_PRACTICE);
     setEditingId("");
   }
 
   function updateField(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  function updateTaskPractice(event) {
+    const { name, value, checked, type } = event.target;
+    setTaskPractice((current) => ({
+      ...current,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   }
 
   async function saveTask(event) {
@@ -345,31 +368,62 @@ function DailyDiary({ user, onSignOut }) {
     }
 
     const payload = toApiPayload({ ...form, startTime, endTime }, selectedDate);
+    let savedTask = null;
     setSaving(true);
     try {
       if (editingId) {
-        await requestJson(`/api/preparation/tasks/${editingId}`, {
+        const result = await requestJson(`/api/preparation/tasks/${editingId}`, {
           method: "PATCH",
           body: JSON.stringify(payload),
         });
-        setNotice("Task changes saved.");
+        savedTask = result.task;
       } else {
-        await requestJson("/api/preparation/tasks", {
+        const result = await requestJson("/api/preparation/tasks", {
           method: "POST",
           body: JSON.stringify(payload),
         });
-        setNotice("Task added.");
+        savedTask = result.task;
       }
+
+      if (taskPractice.enabled) {
+        const practicePayload = {
+          topic: taskPractice.topic.trim(),
+          section: taskPractice.section,
+          date: taskPractice.date,
+          total: Number(taskPractice.total),
+          attempted: Number(taskPractice.attempted),
+          correct: Number(taskPractice.correct),
+          minutes: taskPractice.minutes === "" ? "" : Number(taskPractice.minutes),
+          mistake: taskPractice.mistake,
+          revisionDate: taskPractice.revisionDate,
+          notes: taskPractice.notes,
+          relatedTaskId: savedTask._id,
+        };
+        await requestJson("/api/preparation/topic-sessions", {
+          method: "POST",
+          body: JSON.stringify(practicePayload),
+        });
+      }
+
+      setNotice(taskPractice.enabled
+        ? "Task and practice session saved."
+        : editingId ? "Task changes saved." : "Task added.");
       resetForm();
       await loadTasks(selectedDate, { keepNotice: true });
     } catch (saveError) {
+      if (savedTask) {
+        setEditingId(savedTask._id);
+        await loadTasks(selectedDate, { keepNotice: true });
+        setError(`Task saved, but its practice session was not: ${saveError.message || "please check the practice details and retry."}`);
+      } else {
       setError(saveError.message || "Could not save this task. Try again.");
+      }
     } finally {
       setSaving(false);
     }
   }
 
-  function editTask(task) {
+  async function editTask(task) {
     setEditingId(task._id);
     setForm(
       Object.fromEntries(
@@ -379,8 +433,40 @@ function DailyDiary({ user, onSignOut }) {
         ]),
       ),
     );
+    setTaskPractice({
+      ...DEFAULT_TASK_PRACTICE,
+      topic: task.title || "",
+      section: ["VARC", "DILR", "Quant"].includes(task.section) ? task.section : "VARC",
+      date: task.date || selectedDate,
+      attempted: task.attempted == null ? "" : String(task.attempted),
+      correct: task.correct == null ? "" : String(task.correct),
+      minutes: task.actual == null ? "" : String(task.actual),
+    });
     setError("");
     setNotice("");
+    try {
+      const result = await requestJson(
+        `/api/preparation/topic-sessions?relatedTaskId=${encodeURIComponent(task._id)}&limit=1`,
+      );
+      const session = result.sessions?.[0];
+      if (session) {
+        setTaskPractice({
+          enabled: true,
+          topic: session.topic || task.title || "",
+          section: session.section || "VARC",
+          date: session.date || task.date || selectedDate,
+          total: String(session.total ?? ""),
+          attempted: String(session.attempted ?? ""),
+          correct: String(session.correct ?? ""),
+          minutes: session.minutes == null ? "" : String(session.minutes),
+          mistake: session.mistake || "",
+          revisionDate: session.revisionDate || "",
+          notes: session.notes || "",
+        });
+      }
+    } catch (lookupError) {
+      setError(`Could not check for a linked practice session: ${lookupError.message}`);
+    }
     document.getElementById("taskTitle")?.focus();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -985,6 +1071,68 @@ function DailyDiary({ user, onSignOut }) {
                     <label htmlFor="taskNotes">Notes / mistakes / next action</label>
                     <textarea id="taskNotes" name="notes" maxLength={5000} value={form.notes} onChange={updateField} placeholder="What was difficult? What should you revise?" />
                   </div>
+                  <div className="diary-wide">
+                    <label className="diary-practice-toggle">
+                      <input
+                        type="checkbox"
+                        name="enabled"
+                        checked={taskPractice.enabled}
+                        onChange={updateTaskPractice}
+                      />
+                      Also log this practice in Topic Dashboard
+                    </label>
+                    <p className="diary-muted diary-small">
+                      Only enable this after practice has happened. Existing linked sessions are updated rather than duplicated.
+                    </p>
+                  </div>
+                  {taskPractice.enabled ? (
+                    <>
+                      <div>
+                        <label htmlFor="taskPracticeTopic">Topic *</label>
+                        <input id="taskPracticeTopic" name="topic" required maxLength={200} value={taskPractice.topic || form.title} onChange={updateTaskPractice} />
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeSection">Practice section *</label>
+                        <select id="taskPracticeSection" name="section" required value={taskPractice.section} onChange={updateTaskPractice}>
+                          {["VARC", "DILR", "Quant"].map((section) => <option key={section}>{section}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeDate">Practice date *</label>
+                        <input id="taskPracticeDate" name="date" type="date" required value={taskPractice.date || selectedDate} onChange={updateTaskPractice} />
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeTotal">Total questions *</label>
+                        <input id="taskPracticeTotal" name="total" type="number" min="1" step="1" required value={taskPractice.total} onChange={updateTaskPractice} />
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeAttempted">Questions attempted *</label>
+                        <input id="taskPracticeAttempted" name="attempted" type="number" min="0" step="1" required value={taskPractice.attempted} onChange={updateTaskPractice} />
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeCorrect">Correct answers *</label>
+                        <input id="taskPracticeCorrect" name="correct" type="number" min="0" step="1" required value={taskPractice.correct} onChange={updateTaskPractice} />
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeMinutes">Time taken (minutes)</label>
+                        <input id="taskPracticeMinutes" name="minutes" type="number" min="0" step="1" value={taskPractice.minutes} onChange={updateTaskPractice} />
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeMistake">Main difficulty</label>
+                        <select id="taskPracticeMistake" name="mistake" value={taskPractice.mistake} onChange={updateTaskPractice}>
+                          {["", "Concept not clear", "Calculation error", "Misread question", "Time pressure", "Guessing / poor elimination", "Forgot method", "Careless error", "Other"].map((mistake) => <option key={mistake} value={mistake}>{mistake || "Choose if useful"}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="taskPracticeRevision">Next revision (optional)</label>
+                        <input id="taskPracticeRevision" name="revisionDate" type="date" value={taskPractice.revisionDate} onChange={updateTaskPractice} />
+                      </div>
+                      <div className="diary-wide">
+                        <label htmlFor="taskPracticeNotes">Practice notes (optional)</label>
+                        <textarea id="taskPracticeNotes" name="notes" maxLength={5000} value={taskPractice.notes} onChange={updateTaskPractice} />
+                      </div>
+                    </>
+                  ) : null}
                 </div>
                 <div className="diary-formactions">
                   <button className="diary-primary" type="submit" disabled={saving}>{saving ? "Saving…" : editingId ? "Save changes" : "＋ Add task"}</button>
