@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+:root:not([data-theme="dark"]) body {
+  background: linear-gradient(135deg, #eeeaff, #fff4fa, #edf5ff);
+}

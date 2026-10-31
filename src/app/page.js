@@ -12,9 +12,9 @@ import Dashboard from "./Dashboard";
 import HistoryAnalytics from "./HistoryAnalytics";
 import StudyTimer from "./StudyTimer";
 import BackupSettings from "./BackupSettings";
-import StudyPlan from "./StudyPlan";
+import StudyPlan from "./NextStudyPlan";
 import "./task-diary.css";
-
+import "./navbar.css"
 const SECTIONS = ["VARC", "Quant", "DILR", "Revision", "Mock test", "Analysis", "Other"];
 const PRIORITIES = ["Must do", "Should do", "Bonus"];
 const STATUSES = [
@@ -416,7 +416,7 @@ function DailyDiary({ user, onSignOut }) {
         await loadTasks(selectedDate, { keepNotice: true });
         setError(`Task saved, but its practice session was not: ${saveError.message || "please check the practice details and retry."}`);
       } else {
-      setError(saveError.message || "Could not save this task. Try again.");
+        setError(saveError.message || "Could not save this task. Try again.");
       }
     } finally {
       setSaving(false);
@@ -924,7 +924,7 @@ function DailyDiary({ user, onSignOut }) {
             aria-selected={currentView === "studyplan"}
             onClick={() => setCurrentView("studyplan")}
           >
-            📅 Study plan
+            📅 Next Study plan
           </button>
           <button
             type="button"

@@ -1,0 +1,378 @@
+/* =========================================================
+   TOPIC DASHBOARD — COMPLETE LIGHT / DARK MODE
+   Paste at the VERY END of topic-dashboard.css
+   Supports data-theme="dark", .dark and .cat-diary-dark
+   ========================================================= */
+
+/* ================= LIGHT MODE (DEFAULT) ================= */
+
+#view-topicdash {
+    --td-bg: #ffffff;
+    --td-card: #ffffff;
+    --td-card-soft: #f8fafc;
+    --td-row: #f8fafc;
+    --td-border: #e2e8f0;
+    --td-text: #1e293b;
+    --td-heading: #0f172a;
+    --td-muted: #64748b;
+    --td-input: #ffffff;
+    --td-track: #e2e8f0;
+    --td-shadow: 0 4px 15px rgba(15, 23, 42, .06);
+
+    background: var(--td-bg) !important;
+    color: var(--td-text) !important;
+    color-scheme: light;
+}
+
+/* ================= DARK MODE ================= */
+
+:root[data-theme="dark"] #view-topicdash,
+html[data-theme="dark"] #view-topicdash,
+body[data-theme="dark"] #view-topicdash,
+[data-theme="dark"] #view-topicdash,
+.dark #view-topicdash,
+html.dark #view-topicdash,
+body.dark #view-topicdash,
+.cat-diary-dark #view-topicdash,
+#view-topicdash[data-theme="dark"],
+#view-topicdash.dark,
+#view-topicdash.cat-diary-dark {
+
+    --td-bg: #0b1220;
+    --td-card: #17243a;
+    --td-card-soft: #1c2b43;
+    --td-row: #1b2a40;
+    --td-border: #344966;
+    --td-text: #dce6f5;
+    --td-heading: #f1f5ff;
+    --td-muted: #a7b8d0;
+    --td-input: #101b2d;
+    --td-track: #34445e;
+    --td-shadow: 0 5px 20px rgba(0, 0, 0, .25);
+
+    background: var(--td-bg) !important;
+    color: var(--td-text) !important;
+    color-scheme: dark;
+}
+
+/* ================= MAIN CARDS ================= */
+
+#view-topicdash .card,
+#view-topicdash .topic-stat,
+#view-topicdash .topic-add-panel,
+#view-topicdash .td-session-card,
+#view-topicdash .td-summary-card,
+#view-topicdash .td-coach-panel,
+#view-topicdash .td-coach-stat,
+#view-topicdash .td-action-item,
+#view-topicdash .td-alert-item {
+    background: var(--td-card) !important;
+    border-color: var(--td-border) !important;
+    color: var(--td-text) !important;
+    box-shadow: var(--td-shadow);
+}
+
+/* ================= INNER PANELS ================= */
+
+#view-topicdash .td-empty,
+#view-topicdash .notice,
+#view-topicdash .topic-progress,
+#view-topicdash .topic-evidence,
+#view-topicdash .td-metric {
+    background: var(--td-card-soft) !important;
+    border-color: var(--td-border) !important;
+    color: var(--td-text) !important;
+}
+
+/* ================= HEADINGS & TEXT ================= */
+
+#view-topicdash h1,
+#view-topicdash h2,
+#view-topicdash h3,
+#view-topicdash h4,
+#view-topicdash .tasktitle,
+#view-topicdash .td-topic-name {
+    color: var(--td-heading) !important;
+}
+
+#view-topicdash p,
+#view-topicdash small,
+#view-topicdash label,
+#view-topicdash .diary-muted,
+#view-topicdash .td-muted {
+    color: var(--td-muted);
+}
+
+/* ================= INPUTS & SELECTS ================= */
+
+#view-topicdash input,
+#view-topicdash select,
+#view-topicdash textarea {
+    background: var(--td-input) !important;
+    color: var(--td-text) !important;
+    border: 1px solid var(--td-border) !important;
+    color-scheme: inherit;
+}
+
+#view-topicdash input::placeholder,
+#view-topicdash textarea::placeholder {
+    color: var(--td-muted) !important;
+    opacity: 1;
+}
+
+#view-topicdash input:focus,
+#view-topicdash select:focus,
+#view-topicdash textarea:focus {
+    outline: 2px solid #8173ed !important;
+    outline-offset: 1px;
+    border-color: #8173ed !important;
+}
+
+/* ================= BUTTONS ================= */
+
+#view-topicdash button {
+    transition: background .2s ease, color .2s ease,
+        border-color .2s ease;
+}
+
+:root[data-theme="dark"] #view-topicdash button,
+[data-theme="dark"] #view-topicdash button,
+.dark #view-topicdash button,
+.cat-diary-dark #view-topicdash button,
+#view-topicdash.dark button,
+#view-topicdash.cat-diary-dark button {
+    color: #edf3ff;
+    border-color: var(--td-border);
+}
+
+/* ================= PROGRESS TRACKS ================= */
+
+#view-topicdash .topic-progress,
+#view-topicdash .topic-progress-track,
+#view-topicdash .progress-track {
+    border-color: var(--td-border);
+}
+
+:root[data-theme="dark"] #view-topicdash .topic-progress-track,
+:root[data-theme="dark"] #view-topicdash .progress-track,
+[data-theme="dark"] #view-topicdash .topic-progress-track,
+[data-theme="dark"] #view-topicdash .progress-track,
+.dark #view-topicdash .topic-progress-track,
+.dark #view-topicdash .progress-track,
+.cat-diary-dark #view-topicdash .topic-progress-track,
+.cat-diary-dark #view-topicdash .progress-track {
+    background: var(--td-track) !important;
+}
+
+/* ================= ALERTS ================= */
+
+:root[data-theme="dark"] #view-topicdash .td-alert-item,
+[data-theme="dark"] #view-topicdash .td-alert-item,
+.dark #view-topicdash .td-alert-item,
+.cat-diary-dark #view-topicdash .td-alert-item {
+    background: #202d43 !important;
+    border-color: #405574 !important;
+    color: #e5edfa !important;
+}
+
+/* ================= LINKS ================= */
+
+#view-topicdash a {
+    color: #635bdb;
+}
+
+:root[data-theme="dark"] #view-topicdash a,
+[data-theme="dark"] #view-topicdash a,
+.dark #view-topicdash a,
+.cat-diary-dark #view-topicdash a {
+    color: #a5b4fc;
+}
+
+/* ================= SMOOTH THEME TRANSITION ================= */
+
+#view-topicdash,
+#view-topicdash .card,
+#view-topicdash .topic-stat,
+#view-topicdash .topic-add-panel,
+#view-topicdash .td-session-card,
+#view-topicdash .td-summary-card,
+#view-topicdash .td-coach-panel,
+#view-topicdash .td-alert-item,
+#view-topicdash input,
+#view-topicdash select,
+#view-topicdash textarea {
+    transition: background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+
+/* =====================================
+   TOPIC DASHBOARD - THEME FIX
+===================================== */
+
+/* LIGHT THEME */
+#view-topicdash {
+    --td-bg: #ffffff;
+    --td-card: #f3f5fb;
+    --td-card-inner: #ffffff;
+    --td-input: #ffffff;
+    --td-text: #172033;
+    --td-muted: #64748b;
+    --td-border: #d5dbea;
+    --td-soft: #e8edf8;
+    --td-accent: #6650c8;
+
+    color: var(--td-text) !important;
+    background: var(--td-bg) !important;
+}
+
+#view-topicdash .card,
+#view-topicdash .topic-add-panel,
+#view-topicdash .topic-stat,
+#view-topicdash .td-coach-stat,
+#view-topicdash .td-coach-panel,
+#view-topicdash .td-summary-card,
+#view-topicdash .td-session-card,
+#view-topicdash .td-action-item {
+    background: var(--td-card) !important;
+    color: var(--td-text) !important;
+    border-color: var(--td-border) !important;
+}
+
+#view-topicdash input,
+#view-topicdash select,
+#view-topicdash textarea {
+    background: var(--td-input) !important;
+    color: var(--td-text) !important;
+    border-color: var(--td-border) !important;
+}
+
+#view-topicdash input::placeholder,
+#view-topicdash textarea::placeholder,
+#view-topicdash .diary-muted,
+#view-topicdash .td-footnote,
+#view-topicdash .td-alert-meta {
+    color: var(--td-muted) !important;
+}
+
+#view-topicdash .td-revision-alerts {
+    background: var(--td-card) !important;
+    color: var(--td-text) !important;
+    border-color: var(--td-border) !important;
+}
+
+#view-topicdash .td-alert-item,
+#view-topicdash .td-empty {
+    background: var(--td-card-inner) !important;
+    color: var(--td-text) !important;
+    border-color: var(--td-border) !important;
+}
+
+/* DARK THEME */
+:root[data-theme="dark"] #view-topicdash,
+html[data-theme="dark"] #view-topicdash,
+body[data-theme="dark"] #view-topicdash,
+.dark #view-topicdash,
+#view-topicdash[data-theme="dark"] {
+    --td-bg: #090b12;
+    --td-card: #151a29;
+    --td-card-inner: #101522;
+    --td-input: #090d17;
+    --td-text: #f1f3ff;
+    --td-muted: #aab5ce;
+    --td-border: #35415e;
+    --td-soft: #202b43;
+    --td-accent: #9275ff;
+
+    color: var(--td-text) !important;
+    background: var(--td-bg) !important;
+}
+
+:root[data-theme="dark"] #view-topicdash .card,
+:root[data-theme="dark"] #view-topicdash .topic-add-panel,
+:root[data-theme="dark"] #view-topicdash .topic-stat,
+:root[data-theme="dark"] #view-topicdash .td-coach-stat,
+:root[data-theme="dark"] #view-topicdash .td-coach-panel,
+:root[data-theme="dark"] #view-topicdash .td-summary-card,
+:root[data-theme="dark"] #view-topicdash .td-session-card,
+:root[data-theme="dark"] #view-topicdash .td-action-item,
+html[data-theme="dark"] #view-topicdash .card,
+html[data-theme="dark"] #view-topicdash .topic-add-panel,
+html[data-theme="dark"] #view-topicdash .topic-stat,
+html[data-theme="dark"] #view-topicdash .td-summary-card,
+html[data-theme="dark"] #view-topicdash .td-session-card,
+.dark #view-topicdash .card,
+.dark #view-topicdash .topic-add-panel,
+.dark #view-topicdash .topic-stat,
+.dark #view-topicdash .td-summary-card,
+.dark #view-topicdash .td-session-card {
+    background: #151a29 !important;
+    color: #f1f3ff !important;
+    border-color: #35415e !important;
+}
+
+:root[data-theme="dark"] #view-topicdash input,
+:root[data-theme="dark"] #view-topicdash select,
+:root[data-theme="dark"] #view-topicdash textarea,
+html[data-theme="dark"] #view-topicdash input,
+html[data-theme="dark"] #view-topicdash select,
+html[data-theme="dark"] #view-topicdash textarea,
+.dark #view-topicdash input,
+.dark #view-topicdash select,
+.dark #view-topicdash textarea {
+    background: #090d17 !important;
+    color: #f1f3ff !important;
+    border-color: #45516e !important;
+}
+
+:root[data-theme="dark"] #view-topicdash .td-revision-alerts,
+html[data-theme="dark"] #view-topicdash .td-revision-alerts,
+.dark #view-topicdash .td-revision-alerts {
+    background: #171e30 !important;
+    color: #f1f3ff !important;
+    border-color: #6654a7 !important;
+}
+
+:root[data-theme="dark"] #view-topicdash .td-alert-item,
+:root[data-theme="dark"] #view-topicdash .td-empty,
+html[data-theme="dark"] #view-topicdash .td-alert-item,
+html[data-theme="dark"] #view-topicdash .td-empty,
+.dark #view-topicdash .td-alert-item,
+.dark #view-topicdash .td-empty {
+    background: #202b43 !important;
+    color: #f1f3ff !important;
+    border-color: #40516f !important;
+}
+
+:root[data-theme="dark"] #view-topicdash .diary-muted,
+:root[data-theme="dark"] #view-topicdash .td-footnote,
+:root[data-theme="dark"] #view-topicdash .td-alert-meta,
+html[data-theme="dark"] #view-topicdash .diary-muted,
+html[data-theme="dark"] #view-topicdash .td-footnote,
+html[data-theme="dark"] #view-topicdash .td-alert-meta,
+.dark #view-topicdash .diary-muted,
+.dark #view-topicdash .td-footnote,
+.dark #view-topicdash .td-alert-meta {
+    color: #aab5ce !important;
+}
+
+/* Alert topic name */
+#view-topicdash .td-alert-title {
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    color: var(--td-text) !important;
+}
+
+/* Smooth theme transition */
+#view-topicdash,
+#view-topicdash * {
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}

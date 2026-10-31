@@ -1,0 +1,382 @@
+/* =========================================
+   PERFORMANCE DASHBOARD — LIGHT + DARK THEME
+   ========================================= */
+
+/* LIGHT THEME — default */
+.dashboard-view {
+  --dash-panel: rgba(255, 255, 255, .82);
+  --dash-text: #292d46;
+  --dash-muted: #65708f;
+  --dash-border: #d7dcf4;
+  --dash-button: #ffffff;
+  color: var(--dash-text);
+}
+
+.dashboard-view .diary-panel {
+  background: var(--dash-panel) !important;
+  border: 1px solid var(--dash-border) !important;
+  border-radius: 18px;
+  padding: 16px;
+  color: var(--dash-text) !important;
+  box-shadow: 0 8px 28px rgba(82, 75, 150, .07);
+}
+
+.dashboard-view .diary-stats .diary-stat {
+  border-radius: 15px;
+  padding: 14px;
+  color: #252b45 !important;
+  background: #fff !important;
+  border: 1px solid #d9def4 !important;
+}
+
+.dashboard-view .diary-stats .diary-stat:nth-child(1) {
+  border-top: 3px solid #8064ed !important;
+}
+
+.dashboard-view .diary-stats .diary-stat:nth-child(2) {
+  border-top: 3px solid #28ad78 !important;
+}
+
+.dashboard-view .diary-stats .diary-stat:nth-child(3) {
+  border-top: 3px solid #f2a126 !important;
+}
+
+.dashboard-view .diary-stats .diary-stat:nth-child(4) {
+  border-top: 3px solid #e65caa !important;
+}
+
+.dashboard-view .diary-stat small,
+.dashboard-view .perf-card small {
+  color: #687493 !important;
+}
+
+.dashboard-view .diary-stat strong {
+  color: #202640 !important;
+  font-size: 23px;
+}
+
+/* Performance cards */
+.dashboard-view .performance-grid .perf-card {
+  border-radius: 13px;
+  padding: 13px;
+  background: #f9faff !important;
+  border: 1px solid #d4daf4 !important;
+  color: #292d46 !important;
+}
+
+.dashboard-view .performance-grid .perf-card:nth-child(1) {
+  background: #ffebcf !important;
+  border-color: #ffd08c !important;
+  border-left: 3px solid #f4a62b !important;
+}
+
+.dashboard-view .performance-grid .perf-card:nth-child(2) {
+  border-left: 3px solid #31b98d !important;
+}
+
+.dashboard-view .performance-grid .perf-card:nth-child(3) {
+  border-left: 3px solid #d58be0 !important;
+}
+
+.dashboard-view .performance-grid .perf-card:nth-child(4) {
+  border-left: 3px solid #f3b34c !important;
+}
+
+.dashboard-view .performance-grid .perf-card:nth-child(5) {
+  border-left: 3px solid #8874ed !important;
+}
+
+.dashboard-view .performance-grid .perf-card:nth-child(6) {
+  border-left: 3px solid #43c7b2 !important;
+}
+
+.dashboard-view .perf-card strong {
+  color: #292d46 !important;
+  font-size: 22px;
+}
+
+.dashboard-view .perf-card.streak strong {
+  color: #a85b00 !important;
+}
+
+.dashboard-view .perf-card .sub {
+  color: #65708f !important;
+}
+
+/* Today's thought */
+.dashboard-view .motivation-card {
+  background: linear-gradient(110deg, #fff0fa, #f0edff, #e8f6ff) !important;
+  border: 1px solid #e5c5fa !important;
+  border-radius: 16px;
+  padding: 16px;
+  color: #39345f !important;
+}
+
+.dashboard-view .motivation-card .quote {
+  color: #5142a3 !important;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.dashboard-view .motivation-card p {
+  color: #6c648e !important;
+}
+
+.dashboard-view .motivation-card>div:first-child {
+  color: #bd438e !important;
+}
+
+/* Next best step */
+.dashboard-view #dashboardAdvice {
+  background: #f8f6ff !important;
+  border: 1px solid #ded7ff !important;
+  border-left: 4px solid #8c77ee !important;
+  border-radius: 12px;
+  padding: 13px;
+  color: #4d5680 !important;
+}
+
+/* Buttons */
+.dashboard-view button {
+  background: #ffffff !important;
+  border: 1px solid #cfd5ed !important;
+  color: #30334f !important;
+  border-radius: 10px;
+  font-weight: 650;
+  padding: 10px 14px;
+}
+
+.dashboard-view button:hover {
+  background: #f0edff !important;
+  border-color: #9c8be9 !important;
+  color: #5544b1 !important;
+}
+
+.dashboard-view button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.dashboard-view h2,
+.dashboard-view h3 {
+  color: #51449d !important;
+}
+
+.dashboard-view .diary-muted {
+  color: #697493 !important;
+}
+
+/* =========================================
+   DARK THEME
+   Supports data-theme="dark" and cat-diary-dark
+   ========================================= */
+
+:root[data-theme="dark"] .dashboard-view,
+.cat-diary-dark .dashboard-view {
+  --dash-panel: #11131d;
+  --dash-text: #f1efff;
+  --dash-muted: #c0c7dc;
+  --dash-border: #343b52;
+  --dash-button: #252c43;
+  color: var(--dash-text);
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-panel,
+.cat-diary-dark .dashboard-view .diary-panel {
+  background: #12131b !important;
+  border: 1px solid #343849 !important;
+  color: #f1f0ff !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .25);
+}
+
+/* Dark top stats */
+:root[data-theme="dark"] .dashboard-view .diary-stat,
+.cat-diary-dark .dashboard-view .diary-stat {
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-stats .diary-stat:nth-child(1),
+.cat-diary-dark .dashboard-view .diary-stats .diary-stat:nth-child(1) {
+  background: linear-gradient(135deg, #202c50, #19243d) !important;
+  border: 1px solid #5868bd !important;
+  border-top: 3px solid #898aff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-stats .diary-stat:nth-child(2),
+.cat-diary-dark .dashboard-view .diary-stats .diary-stat:nth-child(2) {
+  background: linear-gradient(135deg, #193c3d, #192d38) !important;
+  border: 1px solid #278e7e !important;
+  border-top: 3px solid #42d6b1 !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-stats .diary-stat:nth-child(3),
+.cat-diary-dark .dashboard-view .diary-stats .diary-stat:nth-child(3) {
+  background: linear-gradient(135deg, #42302a, #292438) !important;
+  border: 1px solid #a47742 !important;
+  border-top: 3px solid #ffc15b !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-stats .diary-stat:nth-child(4),
+.cat-diary-dark .dashboard-view .diary-stats .diary-stat:nth-child(4) {
+  background: linear-gradient(135deg, #42233e, #28233e) !important;
+  border: 1px solid #a34f91 !important;
+  border-top: 3px solid #ed83d0 !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-stat small,
+:root[data-theme="dark"] .dashboard-view .perf-card small,
+.cat-diary-dark .dashboard-view .diary-stat small,
+.cat-diary-dark .dashboard-view .perf-card small {
+  color: #d5d9ed !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-stat strong,
+.cat-diary-dark .dashboard-view .diary-stat strong {
+  color: #ffffff !important;
+}
+
+/* Dark performance cards */
+:root[data-theme="dark"] .dashboard-view .perf-card,
+.cat-diary-dark .dashboard-view .perf-card {
+  color: #f5f3ff !important;
+  background: linear-gradient(135deg, #202b4d, #20253c) !important;
+  border: 1px solid #39445e !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card:nth-child(1),
+.cat-diary-dark .dashboard-view .perf-card:nth-child(1) {
+  background: linear-gradient(135deg, #453321, #29243b) !important;
+  border-color: #a47b3c !important;
+  border-left: 3px solid #ffc45e !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card:nth-child(2),
+.cat-diary-dark .dashboard-view .perf-card:nth-child(2) {
+  background: linear-gradient(135deg, #193c43, #1d293f) !important;
+  border-left: 3px solid #43d6b8 !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card:nth-child(3),
+.cat-diary-dark .dashboard-view .perf-card:nth-child(3) {
+  background: linear-gradient(135deg, #382947, #25263f) !important;
+  border-left: 3px solid #d98be9 !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card:nth-child(4),
+.cat-diary-dark .dashboard-view .perf-card:nth-child(4) {
+  background: linear-gradient(135deg, #453423, #30283c) !important;
+  border-left: 3px solid #ffc15b !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card:nth-child(5),
+.cat-diary-dark .dashboard-view .perf-card:nth-child(5) {
+  background: linear-gradient(135deg, #242c55, #20243e) !important;
+  border-left: 3px solid #9385ff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card:nth-child(6),
+.cat-diary-dark .dashboard-view .perf-card:nth-child(6) {
+  background: linear-gradient(135deg, #193e3c, #202a40) !important;
+  border-left: 3px solid #48d9bd !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card strong,
+.cat-diary-dark .dashboard-view .perf-card strong {
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card.streak strong,
+.cat-diary-dark .dashboard-view .perf-card.streak strong {
+  color: #ffd47c !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .perf-card .sub,
+.cat-diary-dark .dashboard-view .perf-card .sub {
+  color: #c4c9dd !important;
+}
+
+/* Dark thought card */
+:root[data-theme="dark"] .dashboard-view .motivation-card,
+.cat-diary-dark .dashboard-view .motivation-card {
+  background: linear-gradient(110deg, #302442, #202c43, #173d3a) !important;
+  border: 1px solid #71528a !important;
+  color: #f5eaff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .motivation-card .quote,
+.cat-diary-dark .dashboard-view .motivation-card .quote {
+  color: #f3e6ff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .motivation-card p,
+.cat-diary-dark .dashboard-view .motivation-card p {
+  color: #d4c9e6 !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .motivation-card>div:first-child,
+.cat-diary-dark .dashboard-view .motivation-card>div:first-child {
+  color: #ed91d5 !important;
+}
+
+/* Dark next step */
+:root[data-theme="dark"] .dashboard-view #dashboardAdvice,
+.cat-diary-dark .dashboard-view #dashboardAdvice {
+  background: linear-gradient(110deg, #302747, #29233f) !important;
+  border: 1px solid #71569a !important;
+  border-left: 4px solid #9a83e8 !important;
+  color: #eee6ff !important;
+}
+
+/* Dark buttons and headings */
+:root[data-theme="dark"] .dashboard-view button,
+.cat-diary-dark .dashboard-view button {
+  background: linear-gradient(135deg, #27334b, #25283d) !important;
+  border: 1px solid #52617d !important;
+  color: #f5f3ff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view button:hover,
+.cat-diary-dark .dashboard-view button:hover {
+  background: linear-gradient(135deg, #394969, #393452) !important;
+  border-color: #9385d9 !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view h2,
+:root[data-theme="dark"] .dashboard-view h3,
+.cat-diary-dark .dashboard-view h2,
+.cat-diary-dark .dashboard-view h3 {
+  color: #e9e4ff !important;
+}
+
+:root[data-theme="dark"] .dashboard-view .diary-muted,
+.cat-diary-dark .dashboard-view .diary-muted {
+  color: #b9bfd2 !important;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .dashboard-view .diary-panel {
+    padding: 12px;
+  }
+
+  .dashboard-view .motivation-card .quote {
+    font-size: 17px;
+  }
+}
+
+/* Theme toggle button */
+.diary-theme-toggle {
+  padding: 9px 15px !important;
+  border: 1px solid var(--diary-line) !important;
+  border-radius: 10px !important;
+  background: var(--diary-card) !important;
+  color: var(--diary-ink) !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.diary-theme-toggle:hover {
+  opacity: 0.85;
+}

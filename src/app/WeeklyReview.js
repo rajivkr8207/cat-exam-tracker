@@ -303,10 +303,27 @@ export default function WeeklyReview() {
           <div className="week-date-entry">
             <input
               id="weekDate"
-              type="date"
-              aria-label="Choose date"
-              value={selectedDate}
-              onChange={handleDateInput}
+              type="text"
+              placeholder="DD/MM/YYYY"
+              value={
+                selectedDate
+                  ? `${selectedDate.split("-")[2]}/${selectedDate.split("-")[1]}/${selectedDate.split("-")[0]}`
+                  : ""
+              }
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
+                  const [day, month, year] = value.split("/");
+                  const date = new Date(`${year}-${month}-${day}T00:00:00`);
+                  if (
+                    date.getFullYear() === Number(year) &&
+                    date.getMonth() + 1 === Number(month) &&
+                    date.getDate() === Number(day)
+                  ) {
+                    setSelectedDate(`${year}-${month}-${day}`);
+                  }
+                }
+              }}
             />
           </div>
           <div className="date-format-hint">Any date selects its Monday–Sunday week</div>

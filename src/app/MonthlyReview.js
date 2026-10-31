@@ -433,7 +433,7 @@ export default function MonthlyReview() {
       {/* Automatic Monthly Summary */}
       <section
         id="monthAutoSummary"
-        className="month-auto-summary"
+        className="month-auto-summary "
         aria-live="polite"
         aria-label="Automatic monthly summary"
       >

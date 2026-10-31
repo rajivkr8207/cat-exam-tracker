@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { requestJson } from "@/lib/api-client";
-
+import "./dashboard-dark-theme.css";
 const TOPIC_SECTIONS = ["VARC", "DILR", "Quant"];
 const TOPIC_STATUSES = ["Not started", "Learning", "Covered once", "Needs revision", "Revised"];
 const TOPIC_PRIORITIES = ["High", "Medium", "Low"];
@@ -17,7 +17,7 @@ const MISTAKE_OPTIONS = [
   "Careless error",
   "Other",
 ];
-
+import "./topic-dashboard.css"
 function localDateString(date = new Date()) {
   return [
     date.getFullYear(),
@@ -347,6 +347,7 @@ export default function TopicDashboard() {
     }
   }
 
+
   // Filtered Sessions
   const filteredSessions = useMemo(() => {
     const q = tdSearch.trim().toLowerCase();
@@ -470,6 +471,33 @@ export default function TopicDashboard() {
       .sort((a, b) => a.diff - b.diff || a.topic.localeCompare(b.topic));
   }, [sessions]);
 
+
+  const weakTopicAlerts = useMemo(() => {
+    return aggregatedTopics.filter((item) => item.weak);
+  }, [aggregatedTopics]);
+
+  const allTopAlerts = useMemo(() => {
+    const reminders = revisionAlerts.map((item) => ({
+      ...item,
+      alertType: "revision",
+    }));
+
+    const weakOnly = weakTopicAlerts
+      .filter(
+        (weak) =>
+          !revisionAlerts.some(
+            (reminder) =>
+              reminder.topic.trim().toLowerCase() === weak.topic.trim().toLowerCase() &&
+              reminder.section === weak.section
+          )
+      )
+      .map((item) => ({
+        ...item,
+        alertType: "weak",
+      }));
+
+    return [...reminders, ...weakOnly];
+  }, [revisionAlerts, weakTopicAlerts]);
   // Weakness to Action Recommendations
   const actionItems = useMemo(() => {
     const qualified = aggregatedTopics.filter(
@@ -547,44 +575,6 @@ export default function TopicDashboard() {
     return [...set].sort();
   }, [sessions, topics]);
 
-  // Topic Mastery list filtered
-  const filteredTopics = useMemo(() => {
-    const q = topicSearch.trim().toLowerCase();
-    const todayStr = localDateString();
-    return topics
-      .filter((t) => {
-        const secMatch = topicFilterSection === "All" || t.section === topicFilterSection;
-        const statMatch = topicFilterStatus === "All" || t.status === topicFilterStatus;
-        const textMatch = !q || `${t.name} ${t.notes || ""} ${t.section}`.toLowerCase().includes(q);
-        return secMatch && statMatch && textMatch;
-      })
-      .sort((a, b) => {
-        if (topicSort === "section") return (a.section || "").localeCompare(b.section || "") || a.name.localeCompare(b.name);
-        if (topicSort === "accuracy-low") return (a.accuracy ?? 101) - (b.accuracy ?? 101);
-        if (topicSort === "review") return (a.nextReview || "9999-99-99").localeCompare(b.nextReview || "9999-99-99");
-        if (topicSort === "name") return a.name.localeCompare(b.name);
-        // priority first
-        const pRank = (p) => (p === "High" ? 0 : p === "Medium" ? 1 : 2);
-        return pRank(a.priority) - pRank(b.priority) || (a.nextReview && a.nextReview < todayStr ? -1 : 1);
-      });
-  }, [topicFilterSection, topicFilterStatus, topicSearch, topicSort, topics]);
-
-  const masteredTopicsCount = useMemo(
-    () => topics.filter((t) => t.status === "Revised").length,
-    [topics],
-  );
-  const needsAttentionTopicsCount = useMemo(() => {
-    const todayStr = localDateString();
-    return topics.filter(
-      (t) => t.status === "Needs revision" || (t.nextReview && t.nextReview < todayStr),
-    ).length;
-  }, [topics]);
-  const avgTopicAccuracy = useMemo(() => {
-    const accs = topics.map((t) => t.accuracy).filter((a) => a != null);
-    if (!accs.length) return "—";
-    return (accs.reduce((sum, v) => sum + v, 0) / accs.length).toFixed(1) + "%";
-  }, [topics]);
-
   return (
     <section id="view-topicdash" className="panel diary-panel">
       {/* Top Header */}
@@ -639,36 +629,57 @@ export default function TopicDashboard() {
           </span>
         </div>
         <div id="tdRevisionAlertList" className="td-alert-list">
-          {revisionAlerts.length === 0 ? (
+          {aggregatedTopics.length === 0 ? (
             <div className="td-empty">
               No revision dates due in the next 7 days. Add a next-revision date when logging practice.
             </div>
           ) : (
-            revisionAlerts.map((alert, idx) => (
-              <article key={idx} className={`td-alert-item td-alert-${alert.status}`}>
+            allTopAlerts.map((alert, idx) => (
+              <article
+                key={`${alert.section}-${alert.topic}-${alert.alertType}-${idx}`}
+                className={`td-alert-item ${alert.alertType === "weak"
+                  ? "td-alert-overdue"
+                  : `td-alert-${alert.status}`
+                  }`}
+              >
                 <div className="td-alert-main">
                   <div className="td-alert-title">
-                    {alert.topic} <span className="diary-pill">{alert.section}</span>
+                    {alert.topic}
+
+                    <span className="diary-pill">
+                      {alert.section}
+                    </span>
+
+                    {alert.alertType === "weak" && (
+                      <span className="diary-pill topic-status-weak">
+                        Needs attention
+                      </span>
+                    )}
                   </div>
+
                   <div className="td-alert-meta">
-                    {alert.status === "overdue"
-                      ? `${Math.abs(alert.diff)} day${Math.abs(alert.diff) === 1 ? "" : "s"} overdue`
-                      : alert.status === "today"
-                        ? "Scheduled for today"
-                        : "Upcoming revision"}{" "}
-                    · Date {formatDate(alert.due)}
+                    {alert.alertType === "weak"
+                      ? `Accuracy ${alert.recentAccuracy?.toFixed(1) ?? "—"
+                      }% · ${alert.sessions.length} practice sessions`
+                      : alert.status === "overdue"
+                        ? `${Math.abs(alert.diff)} day(s) overdue · Date ${formatDate(alert.due)}`
+                        : alert.status === "today"
+                          ? `Scheduled for today · Date ${formatDate(alert.due)}`
+                          : `Upcoming revision · Date ${formatDate(alert.due)}`}
                   </div>
                 </div>
+
                 <span className="td-alert-status">
-                  {alert.status === "overdue"
-                    ? "Overdue"
-                    : alert.status === "today"
-                      ? "Due today"
-                      : `In ${alert.diff} day${alert.diff === 1 ? "" : "s"}`}
+                  {alert.alertType === "weak"
+                    ? "Problem topic"
+                    : alert.status === "overdue"
+                      ? "Overdue"
+                      : alert.status === "today"
+                        ? "Due today"
+                        : `In ${alert.diff} days`}
                 </span>
               </article>
-            ))
-          )}
+            )))}
         </div>
       </section>
 
@@ -963,10 +974,10 @@ export default function TopicDashboard() {
                           sum +
                           Number(
                             s.unattempted ??
-                              Math.max(
-                                0,
-                                (s.total || s.attempted || 0) - (s.attempted || 0),
-                              ),
+                            Math.max(
+                              0,
+                              (s.total || s.attempted || 0) - (s.attempted || 0),
+                            ),
                           ),
                         0,
                       )}{" "}
@@ -1273,342 +1284,6 @@ export default function TopicDashboard() {
           )}
         </div>
       </div>
-
-      {/* TOPIC MASTERY DASHBOARD SECTION */}
-      <hr style={{ margin: "32px 0 24px", borderColor: "var(--line, #e2e8f0)" }} />
-      <div className="topbar">
-        <div>
-          <h2>🧠 Topic mastery & syllabus tracking</h2>
-          <span className="diary-muted diary-small">
-            Mastery is based on evidence, not lectures watched.
-          </span>
-        </div>
-        <div className="controls">
-          <button type="button" id="addStarterTopics" onClick={addStarterTopics} disabled={loading}>
-            ＋ Add CAT starter topics
-          </button>
-        </div>
-      </div>
-
-      {/* Topic Mastery Stats Grid */}
-      <div className="topic-stats-grid">
-        <div className="topic-stat topic-stat-purple">
-          <small>Topics tracked</small>
-          <strong id="topicTotal">{topics.length}</strong>
-          <span>All sections</span>
-        </div>
-        <div className="topic-stat topic-stat-green">
-          <small>Revised / Mastered</small>
-          <strong id="topicMastered">{masteredTopicsCount}</strong>
-          <span>Proven independently</span>
-        </div>
-        <div className="topic-stat topic-stat-pink">
-          <small>Needs attention</small>
-          <strong id="topicNeedsWork">{needsAttentionTopicsCount}</strong>
-          <span>Weak or overdue</span>
-        </div>
-        <div className="topic-stat topic-stat-blue">
-          <small>Average accuracy</small>
-          <strong id="topicAvgAccuracy">{avgTopicAccuracy}</strong>
-          <span>From logged practice</span>
-        </div>
-      </div>
-
-      {/* Add / Edit Topic Form */}
-      <details className="topic-add-panel" open>
-        <summary>
-          {editingTopicId ? "✏️ Edit selected topic" : "＋ Add or update a topic"}
-        </summary>
-        <form id="topicForm" onSubmit={handleTopicSubmit}>
-          <div className="formgrid diary-formgrid">
-            <div>
-              <label htmlFor="topicName">Topic / skill *</label>
-              <input
-                id="topicName"
-                name="name"
-                required
-                maxLength={200}
-                placeholder="e.g., Percentages, RC inference, Arrangements"
-                value={topicForm.name}
-                onChange={updateTopicField}
-              />
-            </div>
-            <div>
-              <label htmlFor="topicSection">Section</label>
-              <select
-                id="topicSection"
-                name="section"
-                value={topicForm.section}
-                onChange={updateTopicField}
-              >
-                {TOPIC_SECTIONS.map((sec) => (
-                  <option key={sec}>{sec}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="topicStatus">Mastery status</label>
-              <select
-                id="topicStatus"
-                name="status"
-                value={topicForm.status}
-                onChange={updateTopicField}
-              >
-                {TOPIC_STATUSES.map((st) => (
-                  <option key={st}>{st}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="topicPriority">Priority</label>
-              <select
-                id="topicPriority"
-                name="priority"
-                value={topicForm.priority}
-                onChange={updateTopicField}
-              >
-                {TOPIC_PRIORITIES.map((pr) => (
-                  <option key={pr}>{pr}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="topicAttempted">Practice questions attempted</label>
-              <input
-                id="topicAttempted"
-                name="attempted"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="e.g., 40"
-                value={topicForm.attempted}
-                onChange={updateTopicField}
-              />
-            </div>
-            <div>
-              <label htmlFor="topicCorrect">Questions correct</label>
-              <input
-                id="topicCorrect"
-                name="correct"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="e.g., 28"
-                value={topicForm.correct}
-                onChange={updateTopicField}
-              />
-            </div>
-            <div>
-              <label htmlFor="topicAccuracy">Accuracy %</label>
-              <input
-                id="topicAccuracy"
-                name="accuracy"
-                type="number"
-                min="0"
-                max="100"
-                step="0.1"
-                placeholder="Auto-calculated if counts entered"
-                value={topicForm.accuracy}
-                onChange={updateTopicField}
-              />
-            </div>
-            <div>
-              <label htmlFor="topicLastPracticed">Last practised</label>
-              <input
-                id="topicLastPracticed"
-                name="lastPracticed"
-                type="date"
-                lang="en-GB"
-                value={topicForm.lastPracticed}
-                onChange={updateTopicField}
-              />
-            </div>
-            <div>
-              <label htmlFor="topicNextReview">Next revision</label>
-              <input
-                id="topicNextReview"
-                name="nextReview"
-                type="date"
-                lang="en-GB"
-                value={topicForm.nextReview}
-                onChange={updateTopicField}
-              />
-            </div>
-            <div className="wide diary-wide">
-              <label htmlFor="topicNotes">Evidence / what remains difficult</label>
-              <textarea
-                id="topicNotes"
-                name="notes"
-                placeholder="What errors repeat? Can you solve without hints? What needs revision?"
-                value={topicForm.notes}
-                onChange={updateTopicField}
-              />
-            </div>
-          </div>
-          <div className="formactions diary-formactions">
-            <button
-              className="primary diary-primary"
-              type="submit"
-              id="topicSave"
-              disabled={savingTopic || loading}
-            >
-              {savingTopic
-                ? "Saving…"
-                : editingTopicId
-                  ? "Save changes"
-                  : "＋ Add topic"}
-            </button>
-            {editingTopicId ? (
-              <button
-                type="button"
-                id="topicCancel"
-                onClick={resetTopicForm}
-                disabled={savingTopic}
-              >
-                Cancel edit
-              </button>
-            ) : null}
-          </div>
-        </form>
-      </details>
-
-      {/* Topic Filters */}
-      <div className="topic-filters">
-        <input
-          id="topicSearch"
-          placeholder="Search topics…"
-          aria-label="Search topics"
-          value={topicSearch}
-          onChange={(e) => setTopicSearch(e.target.value)}
-        />
-        <select
-          id="topicFilterSection"
-          aria-label="Filter by section"
-          value={topicFilterSection}
-          onChange={(e) => setTopicFilterSection(e.target.value)}
-        >
-          <option value="All">All sections</option>
-          {TOPIC_SECTIONS.map((sec) => (
-            <option key={sec}>{sec}</option>
-          ))}
-        </select>
-        <select
-          id="topicFilterStatus"
-          aria-label="Filter by mastery status"
-          value={topicFilterStatus}
-          onChange={(e) => setTopicFilterStatus(e.target.value)}
-        >
-          <option value="All">All statuses</option>
-          {TOPIC_STATUSES.map((st) => (
-            <option key={st}>{st}</option>
-          ))}
-        </select>
-        <select
-          id="topicSort"
-          aria-label="Sort topics"
-          value={topicSort}
-          onChange={(e) => setTopicSort(e.target.value)}
-        >
-          <option value="priority">Priority first</option>
-          <option value="section">Section</option>
-          <option value="accuracy-low">Lowest accuracy</option>
-          <option value="review">Next revision date</option>
-          <option value="name">Topic name</option>
-        </select>
-      </div>
-
-      {/* Topic Card List */}
-      <div id="topicList" className="tasklist">
-        {filteredTopics.length === 0 ? (
-          <div className="empty diary-empty">
-            {topics.length === 0
-              ? "No topics yet. Start with one topic you have studied, or click &quot;＋ Add CAT starter topics&quot;."
-              : "No topics match these filters. Change the search or filter."}
-          </div>
-        ) : (
-          filteredTopics.map((t) => {
-            const todayStr = localDateString();
-            const isOverdue = t.nextReview && t.nextReview < todayStr && t.status !== "Revised";
-            const tone =
-              t.section === "VARC"
-                ? "tone-varc"
-                : t.section === "DILR"
-                  ? "tone-dilr"
-                  : "tone-quant";
-            const statusClass =
-              t.status === "Revised"
-                ? "topic-status-mastered"
-                : t.status === "Needs revision" || isOverdue
-                  ? "topic-status-weak"
-                  : "topic-status-learning";
-
-            return (
-              <article key={t._id} className={`task topic-card ${tone}`}>
-                <div className="topic-colorbar" />
-                <div>
-                  <div className="topic-title-row">
-                    <span className="tasktitle">{t.name}</span>
-                    <span
-                      className={`diary-pill tag-${t.section === "Quant" ? "quant" : t.section === "DILR" ? "dilr" : "varc"}`}
-                    >
-                      {t.section}
-                    </span>
-                    <span className={`diary-pill ${statusClass}`}>{t.status}</span>
-                    <span className={`diary-pill ${t.priority === "High" ? "diary-pill-high" : ""}`}>
-                      {t.priority} priority
-                    </span>
-                    {isOverdue ? (
-                      <span className="diary-pill topic-status-weak">REVISION OVERDUE</span>
-                    ) : null}
-                  </div>
-                  <div className="meta diary-meta">
-                    <span className="diary-pill">
-                      Questions attempted: {t.attempted != null ? t.attempted : "—"}
-                    </span>
-                    <span className="diary-pill">
-                      Correct: {t.correct != null ? t.correct : "—"}
-                    </span>
-                    <span className="diary-pill">
-                      Accuracy: {t.accuracy != null ? `${t.accuracy}%` : "—"}
-                    </span>
-                    <span className="diary-pill">
-                      Last practised: {t.lastPracticed ? formatDate(t.lastPracticed) : "—"}
-                    </span>
-                  </div>
-                  {t.accuracy != null ? (
-                    <div className="topic-progress" title={`Accuracy ${t.accuracy}%`}>
-                      <span
-                        style={{ width: `${Math.max(0, Math.min(100, t.accuracy))}%` }}
-                      />
-                    </div>
-                  ) : null}
-                  <div className={`topic-next ${isOverdue ? "overdue" : ""}`}>
-                    {isOverdue ? "⚠️ " : ""}
-                    {t.nextReview
-                      ? `Next revision: ${formatDate(t.nextReview)}`
-                      : "No revision date set"}
-                  </div>
-                  {t.notes ? <div className="topic-evidence">{t.notes}</div> : null}
-                </div>
-                <div className="taskbuttons diary-task-buttons">
-                  <button type="button" onClick={() => startEditTopic(t)}>
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="danger diary-danger"
-                    onClick={() => deleteTopic(t._id, t.name)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </article>
-            );
-          })
-        )}
-      </div>
-
-      {/* Notices & Errors */}
       {notice ? (
         <p className="diary-feedback" role="status" style={{ marginTop: "16px" }}>
           {notice}

@@ -620,29 +620,7 @@ export default function MockTests() {
         </button>
       </div>
 
-      {/* Top Stats Cards */}
-      <div className="topic-stats-grid" style={{ margin: "14px 0" }}>
-        <div className="topic-stat topic-stat-purple">
-          <small>Total Mocks Logged</small>
-          <strong>{topStats.totalCount}</strong>
-          <span>Full &amp; sectional tests</span>
-        </div>
-        <div className="topic-stat topic-stat-green">
-          <small>Full Mocks Count</small>
-          <strong>{topStats.fullCount}</strong>
-          <span>Avg score: {topStats.avgFullScore}</span>
-        </div>
-        <div className="topic-stat topic-stat-pink">
-          <small>Overall Accuracy</small>
-          <strong>{topStats.overallAcc}</strong>
-          <span>Across all logged attempts</span>
-        </div>
-        <div className="topic-stat topic-stat-blue">
-          <small>Best Full Score</small>
-          <strong>{topStats.maxFullScore}</strong>
-          <span>Top percentile: {topStats.maxPercentile}</span>
-        </div>
-      </div>
+
 
       {/* Mode Picker (Full-length vs Sectional) */}
       <div className="mock-mode-picker" role="group" aria-label="Choose test type">
@@ -911,43 +889,6 @@ export default function MockTests() {
           {notice}
         </p>
       ) : null}
-
-      {/* SCORE TRENDS & CHARTS */}
-      <section className="stats-section" style={{ marginTop: "24px" }}>
-        <h3>📈 Score trends over time</h3>
-        <p className="diary-muted diary-small">
-          Visual bar charts comparing your latest performance chronologically. Full-length mocks are kept separate from sectional tests.
-        </p>
-
-        <div className="ha-mock-grid" style={{ marginTop: "14px" }}>
-          {/* Full Mock Chart */}
-          <div className="card" style={{ padding: "14px", borderRadius: "12px", border: "1px solid var(--line)" }}>
-            <h4>Full-length Mocks trend</h4>
-            <div id="haFullMocks">{renderBarChart(fullMocks, "ha-full-fill")}</div>
-            <p className="ha-footnote" id="haMockInsight">
-              {fullMockTrendInsight}
-            </p>
-          </div>
-
-          {/* VARC Sectionals Chart */}
-          <div className="card" style={{ padding: "14px", borderRadius: "12px", border: "1px solid var(--line)" }}>
-            <h4>VARC sectionals trend</h4>
-            <div id="haVarcMocks">{renderBarChart(sectionalVARC, "ha-varc-fill")}</div>
-          </div>
-
-          {/* DILR Sectionals Chart */}
-          <div className="card" style={{ padding: "14px", borderRadius: "12px", border: "1px solid var(--line)" }}>
-            <h4>DILR sectionals trend</h4>
-            <div id="haDilrMocks">{renderBarChart(sectionalDILR, "ha-dilr-fill")}</div>
-          </div>
-
-          {/* Quant Sectionals Chart */}
-          <div className="card" style={{ padding: "14px", borderRadius: "12px", border: "1px solid var(--line)" }}>
-            <h4>Quant sectionals trend</h4>
-            <div id="haQuantMocks">{renderBarChart(sectionalQuant, "ha-quant-fill")}</div>
-          </div>
-        </div>
-      </section>
 
       {/* SAVED FULL-LENGTH TESTS */}
       <div className="stats-section" style={{ marginTop: "24px" }}>

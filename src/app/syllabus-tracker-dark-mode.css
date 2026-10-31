@@ -1,0 +1,242 @@
+/* =========================================================
+   FULL CAT SYLLABUS TRACKER — DARK MODE OVERRIDE
+   Paste at the VERY END of the main stylesheet.
+   Supports html/body [data-theme="dark"] and .cat-diary-dark.
+   ========================================================= */
+
+/* Main syllabus surfaces */
+:root[data-theme="dark"] #view-syllabus,
+body[data-theme="dark"] #view-syllabus,
+[data-theme="dark"] #view-syllabus,
+.cat-diary-dark #view-syllabus,
+#view-syllabus.cat-diary-dark {
+  color: #edf3ff !important;
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-section,
+body[data-theme="dark"] #view-syllabus .syllabus-section,
+[data-theme="dark"] #view-syllabus .syllabus-section,
+.cat-diary-dark #view-syllabus .syllabus-section,
+#view-syllabus.cat-diary-dark .syllabus-section {
+  background: #17243a !important;
+  border: 1px solid #405574 !important;
+  color: #edf3ff !important;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .20) !important;
+}
+
+/* Topic rows — override the light #fff / #fcfcfe defaults */
+:root[data-theme="dark"] #view-syllabus .syllabus-topic-row,
+body[data-theme="dark"] #view-syllabus .syllabus-topic-row,
+[data-theme="dark"] #view-syllabus .syllabus-topic-row,
+.cat-diary-dark #view-syllabus .syllabus-topic-row,
+#view-syllabus.cat-diary-dark .syllabus-topic-row {
+  background: #17243a !important;
+  border-top: 1px solid #344966 !important;
+  color: #edf3ff !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-topic-row:nth-child(odd),
+body[data-theme="dark"] #view-syllabus .syllabus-topic-row:nth-child(odd),
+[data-theme="dark"] #view-syllabus .syllabus-topic-row:nth-child(odd),
+.cat-diary-dark #view-syllabus .syllabus-topic-row:nth-child(odd),
+#view-syllabus.cat-diary-dark .syllabus-topic-row:nth-child(odd) {
+  background: #1c2b43 !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-topic-name,
+body[data-theme="dark"] #view-syllabus .syllabus-topic-name,
+[data-theme="dark"] #view-syllabus .syllabus-topic-name,
+.cat-diary-dark #view-syllabus .syllabus-topic-name,
+#view-syllabus.cat-diary-dark .syllabus-topic-name {
+  color: #f1f5ff !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-topic-group,
+:root[data-theme="dark"] #view-syllabus .syllabus-last-covered,
+:root[data-theme="dark"] #view-syllabus .syllabus-footnote,
+body[data-theme="dark"] #view-syllabus .syllabus-topic-group,
+body[data-theme="dark"] #view-syllabus .syllabus-last-covered,
+body[data-theme="dark"] #view-syllabus .syllabus-footnote,
+[data-theme="dark"] #view-syllabus .syllabus-topic-group,
+[data-theme="dark"] #view-syllabus .syllabus-last-covered,
+[data-theme="dark"] #view-syllabus .syllabus-footnote,
+.cat-diary-dark #view-syllabus .syllabus-topic-group,
+.cat-diary-dark #view-syllabus .syllabus-last-covered,
+.cat-diary-dark #view-syllabus .syllabus-footnote,
+#view-syllabus.cat-diary-dark .syllabus-topic-group,
+#view-syllabus.cat-diary-dark .syllabus-last-covered,
+#view-syllabus.cat-diary-dark .syllabus-footnote {
+  color: #afbed5 !important;
+}
+
+/* Section headers retain their VARC / DILR / Quant identity, but stay dark */
+:root[data-theme="dark"] #view-syllabus .syllabus-section-head.varc,
+body[data-theme="dark"] #view-syllabus .syllabus-section-head.varc,
+[data-theme="dark"] #view-syllabus .syllabus-section-head.varc,
+.cat-diary-dark #view-syllabus .syllabus-section-head.varc,
+#view-syllabus.cat-diary-dark .syllabus-section-head.varc {
+  background: linear-gradient(110deg, #382139, #25263f) !important;
+  color: #ff9bc9 !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-section-head.dilr,
+body[data-theme="dark"] #view-syllabus .syllabus-section-head.dilr,
+[data-theme="dark"] #view-syllabus .syllabus-section-head.dilr,
+.cat-diary-dark #view-syllabus .syllabus-section-head.dilr,
+#view-syllabus.cat-diary-dark .syllabus-section-head.dilr {
+  background: linear-gradient(110deg, #153c39, #202e43) !important;
+  color: #6ee7d3 !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-section-head.quant,
+body[data-theme="dark"] #view-syllabus .syllabus-section-head.quant,
+[data-theme="dark"] #view-syllabus .syllabus-section-head.quant,
+.cat-diary-dark #view-syllabus .syllabus-section-head.quant,
+#view-syllabus.cat-diary-dark .syllabus-section-head.quant {
+  background: linear-gradient(110deg, #1d3455, #222b45) !important;
+  color: #9dc5ff !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-section-progress,
+body[data-theme="dark"] #view-syllabus .syllabus-section-progress,
+[data-theme="dark"] #view-syllabus .syllabus-section-progress,
+.cat-diary-dark #view-syllabus .syllabus-section-progress,
+#view-syllabus.cat-diary-dark .syllabus-section-progress {
+  color: #c4d3ea !important;
+}
+
+/* Status dropdowns and date controls */
+:root[data-theme="dark"] #view-syllabus input,
+:root[data-theme="dark"] #view-syllabus select,
+body[data-theme="dark"] #view-syllabus input,
+body[data-theme="dark"] #view-syllabus select,
+[data-theme="dark"] #view-syllabus input,
+[data-theme="dark"] #view-syllabus select,
+.cat-diary-dark #view-syllabus input,
+.cat-diary-dark #view-syllabus select,
+#view-syllabus.cat-diary-dark input,
+#view-syllabus.cat-diary-dark select {
+  background-color: #101b2d !important;
+  color: #f1f5ff !important;
+  border: 1px solid #526987 !important;
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] #view-syllabus input::placeholder,
+body[data-theme="dark"] #view-syllabus input::placeholder,
+[data-theme="dark"] #view-syllabus input::placeholder,
+.cat-diary-dark #view-syllabus input::placeholder,
+#view-syllabus.cat-diary-dark input::placeholder {
+  color: #91a4c0 !important;
+  opacity: 1;
+}
+
+:root[data-theme="dark"] #view-syllabus input:focus,
+:root[data-theme="dark"] #view-syllabus select:focus,
+body[data-theme="dark"] #view-syllabus input:focus,
+body[data-theme="dark"] #view-syllabus select:focus,
+[data-theme="dark"] #view-syllabus input:focus,
+[data-theme="dark"] #view-syllabus select:focus,
+.cat-diary-dark #view-syllabus input:focus,
+.cat-diary-dark #view-syllabus select:focus,
+#view-syllabus.cat-diary-dark input:focus,
+#view-syllabus.cat-diary-dark select:focus {
+  outline: 2px solid #8b7cf6 !important;
+  outline-offset: 1px;
+  border-color: #8b7cf6 !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue,
+body[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue,
+[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue,
+.cat-diary-dark #view-syllabus .syllabus-last-covered.overdue,
+#view-syllabus.cat-diary-dark .syllabus-last-covered.overdue {
+  color: #ff9292 !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue input,
+body[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue input,
+[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue input,
+.cat-diary-dark #view-syllabus .syllabus-last-covered.overdue input,
+#view-syllabus.cat-diary-dark .syllabus-last-covered.overdue input {
+  background: #321f2a !important;
+  border-color: #a94d62 !important;
+  color: #ffd7df !important;
+}
+
+/* Summary cards, progress tracks and empty/loading states */
+:root[data-theme="dark"] #view-syllabus .syllabus-stat,
+body[data-theme="dark"] #view-syllabus .syllabus-stat,
+[data-theme="dark"] #view-syllabus .syllabus-stat,
+.cat-diary-dark #view-syllabus .syllabus-stat,
+#view-syllabus.cat-diary-dark .syllabus-stat {
+  background: #1b2a42 !important;
+  border: 1px solid #405574 !important;
+  color: #edf3ff !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-stat small,
+body[data-theme="dark"] #view-syllabus .syllabus-stat small,
+[data-theme="dark"] #view-syllabus .syllabus-stat small,
+.cat-diary-dark #view-syllabus .syllabus-stat small,
+#view-syllabus.cat-diary-dark .syllabus-stat small {
+  color: #b4c3da !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-stat strong,
+body[data-theme="dark"] #view-syllabus .syllabus-stat strong,
+[data-theme="dark"] #view-syllabus .syllabus-stat strong,
+.cat-diary-dark #view-syllabus .syllabus-stat strong,
+#view-syllabus.cat-diary-dark .syllabus-stat strong {
+  color: #f3f6ff !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .syllabus-progress-track,
+body[data-theme="dark"] #view-syllabus .syllabus-progress-track,
+[data-theme="dark"] #view-syllabus .syllabus-progress-track,
+.cat-diary-dark #view-syllabus .syllabus-progress-track,
+#view-syllabus.cat-diary-dark .syllabus-progress-track {
+  background: #34445e !important;
+}
+
+:root[data-theme="dark"] #view-syllabus .diary-empty,
+:root[data-theme="dark"] #view-syllabus .empty,
+body[data-theme="dark"] #view-syllabus .diary-empty,
+body[data-theme="dark"] #view-syllabus .empty,
+[data-theme="dark"] #view-syllabus .diary-empty,
+[data-theme="dark"] #view-syllabus .empty,
+.cat-diary-dark #view-syllabus .diary-empty,
+.cat-diary-dark #view-syllabus .empty,
+#view-syllabus.cat-diary-dark .diary-empty,
+#view-syllabus.cat-diary-dark .empty {
+  background: #1b2a42 !important;
+  border-color: #405574 !important;
+  color: #b9c8df !important;
+}
+
+/* Syllabus Reset Filters Button - Dark Mode */
+.cat-diary-dark #syllabusResetFilters,
+[data-theme="dark"] #syllabusResetFilters {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border: 1px solid #64748b !important;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cat-diary-dark #syllabusResetFilters:hover,
+[data-theme="dark"] #syllabusResetFilters:hover {
+  background: #6d5ce8 !important;
+  color: #ffffff !important;
+  border-color: #9585ff !important;
+}
+
+.cat-diary-dark #syllabusResetFilters:focus-visible,
+[data-theme="dark"] #syllabusResetFilters:focus-visible {
+  outline: 2px solid #a99bff;
+  outline-offset: 3px;
+}

@@ -8,7 +8,7 @@ import {
   SYLLABUS_SECTIONS,
   SYLLABUS_STATUSES,
 } from "@/lib/syllabus-api";
-
+import "./syllabus-tracker-dark-mode.css"
 function localDateString(date = new Date()) {
   return [
     date.getFullYear(),
@@ -243,37 +243,6 @@ export default function SyllabusTracker() {
         </div>
       </div>
 
-      {/* Subject-wise Quick Overview Bar */}
-      <div className="topic-stats-grid" style={{ marginBottom: "16px" }}>
-        {SYLLABUS_SECTIONS.map((sec) => {
-          const stats = subjectBreakdowns[sec] || { total: 0, covered: 0 };
-          const pct = stats.total > 0 ? Math.round((stats.covered / stats.total) * 100) : 0;
-          const toneClass =
-            sec === "VARC"
-              ? "topic-stat-pink"
-              : sec === "DILR"
-                ? "topic-stat-green"
-                : "topic-stat-blue";
-          return (
-            <div
-              key={sec}
-              className={`topic-stat ${toneClass}`}
-              style={{ cursor: "pointer" }}
-              onClick={() => setSectionFilter(sec)}
-              title={`Filter to ${sec}`}
-            >
-              <small>{sec} Syllabus</small>
-              <strong>
-                {stats.covered} / {stats.total}
-              </strong>
-              <span>{pct}% complete</span>
-              <div className="syllabus-progress-track" style={{ marginTop: "6px" }}>
-                <span style={{ width: `${pct}%` }} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
 
       {/* Search and Filters */}
       <div className="syllabus-controls">
