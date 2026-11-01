@@ -203,17 +203,19 @@ export default function SyllabusTracker() {
   return (
     <section id="view-syllabus" className="panel diary-panel">
       {/* Top Header */}
-      <div className="topbar">
-        <div>
+      <div className="syllabus-topbar">
+        <div className="syllabus-topbar-info">
           <h2>📚 Full CAT syllabus tracker</h2>
           <p className="diary-muted diary-small">
             Chapter-wise CAT preparation checklist. Quant is organised into Arithmetic, Algebra,
             Number System, Geometry (including Mensuration) and Modern Maths.
           </p>
         </div>
-        <button id="syllabusResetFilters" type="button" onClick={resetFilters}>
-          Reset filters
-        </button>
+        <div className="syllabus-topbar-actions">
+          <button id="syllabusResetFilters" type="button" onClick={resetFilters}>
+            Reset filters
+          </button>
+        </div>
       </div>
 
       <div className="notice small diary-notice" style={{ margin: "14px 0" }}>
@@ -225,19 +227,19 @@ export default function SyllabusTracker() {
 
       {/* Summary Stats Grid */}
       <div className="syllabus-summary">
-        <div className="syllabus-stat">
+        <div className="syllabus-stat syllabus-stat-purple">
           <small>Topics in view</small>
           <strong id="syllabusVisibleCount">{totalInView}</strong>
         </div>
-        <div className="syllabus-stat">
+        <div className="syllabus-stat syllabus-stat-green">
           <small>Covered / revised</small>
           <strong id="syllabusMasteredCount">{coveredInView}</strong>
         </div>
-        <div className="syllabus-stat">
+        <div className="syllabus-stat syllabus-stat-orange">
           <small>In progress</small>
           <strong id="syllabusProgressCount">{progressInView}</strong>
         </div>
-        <div className="syllabus-stat">
+        <div className="syllabus-stat syllabus-stat-blue">
           <small>Coverage</small>
           <strong id="syllabusCoverage">{coveragePercent}%</strong>
         </div>

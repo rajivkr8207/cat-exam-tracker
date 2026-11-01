@@ -58,7 +58,6 @@ body.dark #view-topicdash,
 /* ================= MAIN CARDS ================= */
 
 #view-topicdash .card,
-#view-topicdash .topic-stat,
 #view-topicdash .topic-add-panel,
 #view-topicdash .td-session-card,
 #view-topicdash .td-summary-card,
@@ -192,7 +191,6 @@ body.dark #view-topicdash,
 
 #view-topicdash,
 #view-topicdash .card,
-#view-topicdash .topic-stat,
 #view-topicdash .topic-add-panel,
 #view-topicdash .td-session-card,
 #view-topicdash .td-summary-card,
@@ -229,7 +227,6 @@ body.dark #view-topicdash,
 
 #view-topicdash .card,
 #view-topicdash .topic-add-panel,
-#view-topicdash .topic-stat,
 #view-topicdash .td-coach-stat,
 #view-topicdash .td-coach-panel,
 #view-topicdash .td-summary-card,
@@ -291,7 +288,6 @@ body[data-theme="dark"] #view-topicdash,
 
 :root[data-theme="dark"] #view-topicdash .card,
 :root[data-theme="dark"] #view-topicdash .topic-add-panel,
-:root[data-theme="dark"] #view-topicdash .topic-stat,
 :root[data-theme="dark"] #view-topicdash .td-coach-stat,
 :root[data-theme="dark"] #view-topicdash .td-coach-panel,
 :root[data-theme="dark"] #view-topicdash .td-summary-card,
@@ -299,12 +295,10 @@ body[data-theme="dark"] #view-topicdash,
 :root[data-theme="dark"] #view-topicdash .td-action-item,
 html[data-theme="dark"] #view-topicdash .card,
 html[data-theme="dark"] #view-topicdash .topic-add-panel,
-html[data-theme="dark"] #view-topicdash .topic-stat,
 html[data-theme="dark"] #view-topicdash .td-summary-card,
 html[data-theme="dark"] #view-topicdash .td-session-card,
 .dark #view-topicdash .card,
 .dark #view-topicdash .topic-add-panel,
-.dark #view-topicdash .topic-stat,
 .dark #view-topicdash .td-summary-card,
 .dark #view-topicdash .td-session-card {
     background: #151a29 !important;
@@ -375,4 +369,214 @@ html[data-theme="dark"] #view-topicdash .td-alert-meta,
         background-color 0.2s ease,
         color 0.2s ease,
         border-color 0.2s ease;
+}
+
+/* =====================================
+   TOPIC DASHBOARD COLORFUL STAT CARDS
+===================================== */
+#view-topicdash .topic-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0 20px;
+}
+
+#view-topicdash .topic-stat {
+    border: 1px solid transparent !important;
+    border-radius: 15px !important;
+    padding: 15px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+#view-topicdash .topic-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+#view-topicdash .topic-stat small {
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 0.01em;
+}
+
+#view-topicdash .topic-stat strong {
+    font-size: 26px;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    margin: 2px 0;
+}
+
+#view-topicdash .topic-stat span {
+    font-size: 11px;
+    opacity: 0.85;
+    line-height: 1.35;
+}
+
+/* LIGHT MODE COLORS */
+#view-topicdash .topic-stat-purple {
+    background: linear-gradient(135deg, #f0edff, #fbfaff) !important;
+    border-color: #d9d1ff !important;
+    color: #5140a7 !important;
+}
+#view-topicdash .topic-stat-purple small { color: #5140a7 !important; }
+#view-topicdash .topic-stat-purple strong { color: #2e1065 !important; }
+#view-topicdash .topic-stat-purple span { color: #6b5fb5 !important; }
+
+#view-topicdash .topic-stat-pink {
+    background: linear-gradient(135deg, #fff0f6, #fffafd) !important;
+    border-color: #f3cadd !important;
+    color: #a02c62 !important;
+}
+#view-topicdash .topic-stat-pink small { color: #a02c62 !important; }
+#view-topicdash .topic-stat-pink strong { color: #701a40 !important; }
+#view-topicdash .topic-stat-pink span { color: #ba4a7e !important; }
+
+#view-topicdash .topic-stat-blue {
+    background: linear-gradient(135deg, #eaf3ff, #fbfdff) !important;
+    border-color: #c7dcff !important;
+    color: #205e9d !important;
+}
+#view-topicdash .topic-stat-blue small { color: #205e9d !important; }
+#view-topicdash .topic-stat-blue strong { color: #173f6b !important; }
+#view-topicdash .topic-stat-blue span { color: #437cb8 !important; }
+
+#view-topicdash .topic-stat-orange {
+    background: linear-gradient(135deg, #fff4e6, #fffdf9) !important;
+    border-color: #f2d9b5 !important;
+    color: #92510e !important;
+}
+#view-topicdash .topic-stat-orange small { color: #92510e !important; }
+#view-topicdash .topic-stat-orange strong { color: #78350f !important; }
+#view-topicdash .topic-stat-orange span { color: #ad6d25 !important; }
+
+#view-topicdash .topic-stat-green {
+    background: linear-gradient(135deg, #e7f9ed, #fbfffc) !important;
+    border-color: #c4e9cf !important;
+    color: #207344 !important;
+}
+#view-topicdash .topic-stat-green small { color: #207344 !important; }
+#view-topicdash .topic-stat-green strong { color: #134e2c !important; }
+#view-topicdash .topic-stat-green span { color: #3b8e5d !important; }
+
+/* DARK MODE COLORS */
+:root[data-theme="dark"] #view-topicdash .topic-stat-purple,
+html[data-theme="dark"] #view-topicdash .topic-stat-purple,
+.cat-diary-dark #view-topicdash .topic-stat-purple,
+.dark #view-topicdash .topic-stat-purple {
+    background: #201a38 !important;
+    border-color: #3b305e !important;
+    color: #c4b5fd !important;
+}
+:root[data-theme="dark"] #view-topicdash .topic-stat-purple small,
+html[data-theme="dark"] #view-topicdash .topic-stat-purple small,
+.cat-diary-dark #view-topicdash .topic-stat-purple small,
+.dark #view-topicdash .topic-stat-purple small { color: #c4b5fd !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-purple strong,
+html[data-theme="dark"] #view-topicdash .topic-stat-purple strong,
+.cat-diary-dark #view-topicdash .topic-stat-purple strong,
+.dark #view-topicdash .topic-stat-purple strong { color: #ffffff !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-purple span,
+html[data-theme="dark"] #view-topicdash .topic-stat-purple span,
+.cat-diary-dark #view-topicdash .topic-stat-purple span,
+.dark #view-topicdash .topic-stat-purple span { color: #a78bfa !important; }
+
+:root[data-theme="dark"] #view-topicdash .topic-stat-pink,
+html[data-theme="dark"] #view-topicdash .topic-stat-pink,
+.cat-diary-dark #view-topicdash .topic-stat-pink,
+.dark #view-topicdash .topic-stat-pink {
+    background: #2b1824 !important;
+    border-color: #52273f !important;
+    color: #f472b6 !important;
+}
+:root[data-theme="dark"] #view-topicdash .topic-stat-pink small,
+html[data-theme="dark"] #view-topicdash .topic-stat-pink small,
+.cat-diary-dark #view-topicdash .topic-stat-pink small,
+.dark #view-topicdash .topic-stat-pink small { color: #f472b6 !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-pink strong,
+html[data-theme="dark"] #view-topicdash .topic-stat-pink strong,
+.cat-diary-dark #view-topicdash .topic-stat-pink strong,
+.dark #view-topicdash .topic-stat-pink strong { color: #f472b6 !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-pink span,
+html[data-theme="dark"] #view-topicdash .topic-stat-pink span,
+.cat-diary-dark #view-topicdash .topic-stat-pink span,
+.dark #view-topicdash .topic-stat-pink span { color: #fbcfe8 !important; }
+
+:root[data-theme="dark"] #view-topicdash .topic-stat-blue,
+html[data-theme="dark"] #view-topicdash .topic-stat-blue,
+.cat-diary-dark #view-topicdash .topic-stat-blue,
+.dark #view-topicdash .topic-stat-blue {
+    background: #15243b !important;
+    border-color: #243d63 !important;
+    color: #93c5fd !important;
+}
+:root[data-theme="dark"] #view-topicdash .topic-stat-blue small,
+html[data-theme="dark"] #view-topicdash .topic-stat-blue small,
+.cat-diary-dark #view-topicdash .topic-stat-blue small,
+.dark #view-topicdash .topic-stat-blue small { color: #93c5fd !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-blue strong,
+html[data-theme="dark"] #view-topicdash .topic-stat-blue strong,
+.cat-diary-dark #view-topicdash .topic-stat-blue strong,
+.dark #view-topicdash .topic-stat-blue strong { color: #ffffff !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-blue span,
+html[data-theme="dark"] #view-topicdash .topic-stat-blue span,
+.cat-diary-dark #view-topicdash .topic-stat-blue span,
+.dark #view-topicdash .topic-stat-blue span { color: #7dd3fc !important; }
+
+:root[data-theme="dark"] #view-topicdash .topic-stat-orange,
+html[data-theme="dark"] #view-topicdash .topic-stat-orange,
+.cat-diary-dark #view-topicdash .topic-stat-orange,
+.dark #view-topicdash .topic-stat-orange {
+    background: #2b2114 !important;
+    border-color: #543d1f !important;
+    color: #fcd34d !important;
+}
+:root[data-theme="dark"] #view-topicdash .topic-stat-orange small,
+html[data-theme="dark"] #view-topicdash .topic-stat-orange small,
+.cat-diary-dark #view-topicdash .topic-stat-orange small,
+.dark #view-topicdash .topic-stat-orange small { color: #fcd34d !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-orange strong,
+html[data-theme="dark"] #view-topicdash .topic-stat-orange strong,
+.cat-diary-dark #view-topicdash .topic-stat-orange strong,
+.dark #view-topicdash .topic-stat-orange strong { color: #fcd34d !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-orange span,
+html[data-theme="dark"] #view-topicdash .topic-stat-orange span,
+.cat-diary-dark #view-topicdash .topic-stat-orange span,
+.dark #view-topicdash .topic-stat-orange span { color: #fde68a !important; }
+
+:root[data-theme="dark"] #view-topicdash .topic-stat-green,
+html[data-theme="dark"] #view-topicdash .topic-stat-green,
+.cat-diary-dark #view-topicdash .topic-stat-green,
+.dark #view-topicdash .topic-stat-green {
+    background: #132b22 !important;
+    border-color: #1f4d3c !important;
+    color: #6ee7b7 !important;
+}
+:root[data-theme="dark"] #view-topicdash .topic-stat-green small,
+html[data-theme="dark"] #view-topicdash .topic-stat-green small,
+.cat-diary-dark #view-topicdash .topic-stat-green small,
+.dark #view-topicdash .topic-stat-green small { color: #6ee7b7 !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-green strong,
+html[data-theme="dark"] #view-topicdash .topic-stat-green strong,
+.cat-diary-dark #view-topicdash .topic-stat-green strong,
+.dark #view-topicdash .topic-stat-green strong { color: #6ee7b7 !important; }
+:root[data-theme="dark"] #view-topicdash .topic-stat-green span,
+html[data-theme="dark"] #view-topicdash .topic-stat-green span,
+.cat-diary-dark #view-topicdash .topic-stat-green span,
+.dark #view-topicdash .topic-stat-green span { color: #a7f3d0 !important; }
+
+@media (max-width: 900px) {
+    #view-topicdash .topic-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 500px) {
+    #view-topicdash .topic-stats-grid {
+        grid-template-columns: 1fr;
+    }
 }

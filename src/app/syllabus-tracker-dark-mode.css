@@ -165,32 +165,237 @@ body[data-theme="dark"] #view-syllabus .syllabus-last-covered.overdue input,
   color: #ffd7df !important;
 }
 
-/* Summary cards, progress tracks and empty/loading states */
-:root[data-theme="dark"] #view-syllabus .syllabus-stat,
-body[data-theme="dark"] #view-syllabus .syllabus-stat,
-[data-theme="dark"] #view-syllabus .syllabus-stat,
-.cat-diary-dark #view-syllabus .syllabus-stat,
-#view-syllabus.cat-diary-dark .syllabus-stat {
-  background: #1b2a42 !important;
-  border: 1px solid #405574 !important;
-  color: #edf3ff !important;
+/* =========================================================
+   SYLLABUS TOPBAR & RESET FILTERS (ALIGNED TO RIGHT)
+   ========================================================= */
+.syllabus-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
 }
 
-:root[data-theme="dark"] #view-syllabus .syllabus-stat small,
-body[data-theme="dark"] #view-syllabus .syllabus-stat small,
-[data-theme="dark"] #view-syllabus .syllabus-stat small,
-.cat-diary-dark #view-syllabus .syllabus-stat small,
-#view-syllabus.cat-diary-dark .syllabus-stat small {
-  color: #b4c3da !important;
+.syllabus-topbar-info {
+  flex: 1;
+  min-width: 0;
 }
 
-:root[data-theme="dark"] #view-syllabus .syllabus-stat strong,
-body[data-theme="dark"] #view-syllabus .syllabus-stat strong,
-[data-theme="dark"] #view-syllabus .syllabus-stat strong,
-.cat-diary-dark #view-syllabus .syllabus-stat strong,
-#view-syllabus.cat-diary-dark .syllabus-stat strong {
-  color: #f3f6ff !important;
+.syllabus-topbar-info h2 {
+  margin-bottom: 4px;
 }
+
+.syllabus-topbar-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+
+/* Base button style (Light mode) */
+#syllabusResetFilters {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-size: 13px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#syllabusResetFilters:hover {
+  background: #6350c7;
+  color: #ffffff;
+  border-color: #6350c7;
+  box-shadow: 0 4px 12px rgba(99, 80, 199, 0.25);
+  transform: translateY(-1px);
+}
+
+#syllabusResetFilters:focus-visible {
+  outline: 2px solid #6350c7;
+  outline-offset: 2px;
+}
+
+/* Syllabus Reset Filters Button - Dark Mode */
+.cat-diary-dark #syllabusResetFilters,
+:root[data-theme="dark"] #syllabusResetFilters,
+body[data-theme="dark"] #syllabusResetFilters,
+[data-theme="dark"] #syllabusResetFilters,
+.dark #syllabusResetFilters {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border: 1px solid #64748b !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.cat-diary-dark #syllabusResetFilters:hover,
+:root[data-theme="dark"] #syllabusResetFilters:hover,
+body[data-theme="dark"] #syllabusResetFilters:hover,
+[data-theme="dark"] #syllabusResetFilters:hover,
+.dark #syllabusResetFilters:hover {
+  background: #6d5ce8 !important;
+  color: #ffffff !important;
+  border-color: #9585ff !important;
+  box-shadow: 0 4px 14px rgba(109, 92, 232, 0.35) !important;
+}
+
+.cat-diary-dark #syllabusResetFilters:focus-visible,
+:root[data-theme="dark"] #syllabusResetFilters:focus-visible,
+body[data-theme="dark"] #syllabusResetFilters:focus-visible,
+[data-theme="dark"] #syllabusResetFilters:focus-visible,
+.dark #syllabusResetFilters:focus-visible {
+  outline: 2px solid #a99bff !important;
+  outline-offset: 3px !important;
+}
+
+@media (max-width: 640px) {
+  .syllabus-topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .syllabus-topbar-actions {
+    align-self: flex-end;
+    padding-top: 0;
+  }
+}
+
+/* =========================================================
+   SYLLABUS STAT CARDS — LIGHT & DARK COLORFUL PALETTES
+   ========================================================= */
+#view-syllabus .syllabus-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+#view-syllabus .syllabus-stat {
+  border: 1px solid transparent !important;
+  border-radius: 15px !important;
+  padding: 15px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+#view-syllabus .syllabus-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+#view-syllabus .syllabus-stat small {
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+#view-syllabus .syllabus-stat strong {
+  font-size: 26px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+/* LIGHT MODE COLORS */
+#view-syllabus .syllabus-stat-purple {
+  background: linear-gradient(135deg, #f0edff, #fbfaff) !important;
+  border-color: #d9d1ff !important;
+  color: #5140a7 !important;
+}
+#view-syllabus .syllabus-stat-purple small { color: #5140a7 !important; }
+#view-syllabus .syllabus-stat-purple strong { color: #2e1065 !important; }
+
+#view-syllabus .syllabus-stat-green {
+  background: linear-gradient(135deg, #e7f9ed, #fbfffc) !important;
+  border-color: #c4e9cf !important;
+  color: #207344 !important;
+}
+#view-syllabus .syllabus-stat-green small { color: #207344 !important; }
+#view-syllabus .syllabus-stat-green strong { color: #134e2c !important; }
+
+#view-syllabus .syllabus-stat-orange {
+  background: linear-gradient(135deg, #fff4e6, #fffdf9) !important;
+  border-color: #f2d9b5 !important;
+  color: #92510e !important;
+}
+#view-syllabus .syllabus-stat-orange small { color: #92510e !important; }
+#view-syllabus .syllabus-stat-orange strong { color: #78350f !important; }
+
+#view-syllabus .syllabus-stat-blue {
+  background: linear-gradient(135deg, #eaf3ff, #fbfdff) !important;
+  border-color: #c7dcff !important;
+  color: #205e9d !important;
+}
+#view-syllabus .syllabus-stat-blue small { color: #205e9d !important; }
+#view-syllabus .syllabus-stat-blue strong { color: #173f6b !important; }
+
+/* DARK MODE COLORS */
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-purple,
+body[data-theme="dark"] #view-syllabus .syllabus-stat-purple,
+[data-theme="dark"] #view-syllabus .syllabus-stat-purple,
+.cat-diary-dark #view-syllabus .syllabus-stat-purple,
+#view-syllabus.cat-diary-dark .syllabus-stat-purple,
+.dark #view-syllabus .syllabus-stat-purple {
+  background: #201a38 !important;
+  border-color: #3b305e !important;
+  color: #c4b5fd !important;
+}
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-purple small,
+.cat-diary-dark #view-syllabus .syllabus-stat-purple small { color: #c4b5fd !important; }
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-purple strong,
+.cat-diary-dark #view-syllabus .syllabus-stat-purple strong { color: #ffffff !important; }
+
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-green,
+body[data-theme="dark"] #view-syllabus .syllabus-stat-green,
+[data-theme="dark"] #view-syllabus .syllabus-stat-green,
+.cat-diary-dark #view-syllabus .syllabus-stat-green,
+#view-syllabus.cat-diary-dark .syllabus-stat-green,
+.dark #view-syllabus .syllabus-stat-green {
+  background: #132b22 !important;
+  border-color: #1f4d3c !important;
+  color: #6ee7b7 !important;
+}
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-green small,
+.cat-diary-dark #view-syllabus .syllabus-stat-green small { color: #6ee7b7 !important; }
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-green strong,
+.cat-diary-dark #view-syllabus .syllabus-stat-green strong { color: #6ee7b7 !important; }
+
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-orange,
+body[data-theme="dark"] #view-syllabus .syllabus-stat-orange,
+[data-theme="dark"] #view-syllabus .syllabus-stat-orange,
+.cat-diary-dark #view-syllabus .syllabus-stat-orange,
+#view-syllabus.cat-diary-dark .syllabus-stat-orange,
+.dark #view-syllabus .syllabus-stat-orange {
+  background: #2b2114 !important;
+  border-color: #543d1f !important;
+  color: #fcd34d !important;
+}
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-orange small,
+.cat-diary-dark #view-syllabus .syllabus-stat-orange small { color: #fcd34d !important; }
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-orange strong,
+.cat-diary-dark #view-syllabus .syllabus-stat-orange strong { color: #fcd34d !important; }
+
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-blue,
+body[data-theme="dark"] #view-syllabus .syllabus-stat-blue,
+[data-theme="dark"] #view-syllabus .syllabus-stat-blue,
+.cat-diary-dark #view-syllabus .syllabus-stat-blue,
+#view-syllabus.cat-diary-dark .syllabus-stat-blue,
+.dark #view-syllabus .syllabus-stat-blue {
+  background: #15243b !important;
+  border-color: #243d63 !important;
+  color: #93c5fd !important;
+}
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-blue small,
+.cat-diary-dark #view-syllabus .syllabus-stat-blue small { color: #93c5fd !important; }
+:root[data-theme="dark"] #view-syllabus .syllabus-stat-blue strong,
+.cat-diary-dark #view-syllabus .syllabus-stat-blue strong { color: #ffffff !important; }
 
 :root[data-theme="dark"] #view-syllabus .syllabus-progress-track,
 body[data-theme="dark"] #view-syllabus .syllabus-progress-track,
@@ -213,30 +418,4 @@ body[data-theme="dark"] #view-syllabus .empty,
   background: #1b2a42 !important;
   border-color: #405574 !important;
   color: #b9c8df !important;
-}
-
-/* Syllabus Reset Filters Button - Dark Mode */
-.cat-diary-dark #syllabusResetFilters,
-[data-theme="dark"] #syllabusResetFilters {
-  background: #1e293b !important;
-  color: #ffffff !important;
-  border: 1px solid #64748b !important;
-  font-weight: 700;
-  border-radius: 8px;
-  padding: 9px 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cat-diary-dark #syllabusResetFilters:hover,
-[data-theme="dark"] #syllabusResetFilters:hover {
-  background: #6d5ce8 !important;
-  color: #ffffff !important;
-  border-color: #9585ff !important;
-}
-
-.cat-diary-dark #syllabusResetFilters:focus-visible,
-[data-theme="dark"] #syllabusResetFilters:focus-visible {
-  outline: 2px solid #a99bff;
-  outline-offset: 3px;
 }

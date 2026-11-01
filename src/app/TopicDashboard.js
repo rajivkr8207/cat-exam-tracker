@@ -594,7 +594,7 @@ export default function TopicDashboard() {
           <strong id="tdSessions">{filteredSessions.length}</strong>
           <span>Logged by you</span>
         </div>
-        <div className="topic-stat topic-stat-green">
+        <div className="topic-stat topic-stat-pink">
           <small>Questions attempted</small>
           <strong id="tdAttempted">{totalAttemptedQuestions}</strong>
           <span>Across logged sessions</span>
@@ -604,7 +604,7 @@ export default function TopicDashboard() {
           <strong id="tdAccuracy">{overallAccuracy}</strong>
           <span>Correct ÷ attempted</span>
         </div>
-        <div className="topic-stat topic-stat-pink">
+        <div className="topic-stat topic-stat-orange">
           <small>Topics needing attention</small>
           <strong id="tdWeak">{weakCount}</strong>
           <span>Based on enough recent data</span>

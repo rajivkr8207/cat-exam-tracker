@@ -199,6 +199,14 @@ export default function MockTests() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  // Helper for displaying and scrolling to errors
+  function triggerError(msg) {
+    setError(msg);
+    setTimeout(() => {
+      document.getElementById("mockFormError")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 50);
+  }
+
   // Form submit
   async function handleSubmit(e) {
     e.preventDefault();
@@ -206,18 +214,18 @@ export default function MockTests() {
     setNotice("");
 
     if (!testName.trim()) {
-      setError("Please enter a test name.");
+      triggerError("Please enter a test name (e.g. AIMCAT 01, SIMCAT 02, or Sectional Practice).");
       return;
     }
     if (!testDate) {
-      setError("Please enter a valid test date.");
+      triggerError("Please select or enter a valid test date.");
       return;
     }
 
     if (percentile !== "") {
       const p = Number(percentile);
       if (isNaN(p) || p < 0 || p > 100) {
-        setError("Percentile must be between 0 and 100.");
+        triggerError("Percentile must be a number between 0 and 100.");
         return;
       }
     }
@@ -237,12 +245,12 @@ export default function MockTests() {
 
       for (const [key, label] of countFields) {
         if (inp[key] === "") {
-          setError(`${sec}: enter ${label}. Enter 0 if none.`);
+          triggerError(`${sec}: please enter ${label} (enter 0 if none).`);
           return;
         }
         const val = Number(inp[key]);
         if (!Number.isInteger(val) || val < 0) {
-          setError(`${sec}: ${label} must be a non-negative whole number.`);
+          triggerError(`${sec}: ${label} must be a non-negative whole number (0 or higher).`);
           return;
         }
       }
@@ -254,14 +262,21 @@ export default function MockTests() {
       const wnn = Number(inp.wrongNoNeg);
 
       if (tot > 0 && att > tot) {
-        setError(`${sec}: attempted questions (${att}) cannot exceed total questions (${tot}).`);
+        triggerError(`${sec}: Attempted questions (${att}) cannot be greater than Total questions (${tot}).`);
         return;
       }
 
-      if (cor + wn + wnn !== att) {
-        setError(
-          `${sec}: attempted (${att}) must equal correct (${cor}) + negative-marked (${wn}) + non-negative-marked (${wnn}).`,
-        );
+      const sum = cor + wn + wnn;
+      if (sum !== att) {
+        if (sum < att) {
+          triggerError(
+            `${sec}: You attempted ${att} questions, but only ${sum} are accounted for (${cor} correct + ${wn} negative-marked + ${wnn} non-negative = ${sum}). Please add the remaining ${att - sum} incorrect or unclassified question(s).`,
+          );
+        } else {
+          triggerError(
+            `${sec}: The sum of Correct (${cor}) + Negative-marked (${wn}) + Non-negative (${wnn}) = ${sum}, which is more than your Attempted count (${att}). Please adjust the counts.`,
+          );
+        }
         return;
       }
     }
@@ -314,7 +329,7 @@ export default function MockTests() {
       resetForm();
       window.setTimeout(() => setNotice(""), 3500);
     } catch (err) {
-      setError(err.message || "Failed to save mock test.");
+      triggerError(err.message || "Failed to save mock test. Please check your network and try again.");
     } finally {
       setSaving(false);
     }
@@ -466,43 +481,44 @@ export default function MockTests() {
             <span className="muted small">· {formatDate(m.date)}</span>
           </div>
 
-          <div className="meta" style={{ marginTop: "6px" }}>
-            <span className="pill">
+          <div className="diary-meta mock-meta" style={{ marginTop: "8px" }}>
+            <span className="diary-pill">
               {isFull ? "Full-length mock" : `Sectional · ${m.testSection}`}
             </span>
             {hasSectionDetails && totalQuestions > 0 ? (
-              <span className="pill">Total Q {totalQuestions}</span>
+              <span className="diary-pill">Total Q: {totalQuestions}</span>
             ) : null}
-            <span className="pill">
-              Attempted {hasSectionDetails ? totalAttempted : m.attempts ?? "—"}
+            <span className="diary-pill">
+              Attempted: {hasSectionDetails ? totalAttempted : m.attempts ?? "—"}
             </span>
             {hasSectionDetails ? (
-              <span className="pill">Unattempted {totalUnattempted}</span>
+              <span className="diary-pill">Unattempted: {totalUnattempted}</span>
             ) : null}
             {hasSectionDetails ? (
-              <span className="pill">Correct {totalCorrect}</span>
+              <span className="diary-pill diary-pill-done">Correct: {totalCorrect}</span>
             ) : null}
             {hasSectionDetails ? (
-              <span className="pill">Incorrect {totalIncorrect}</span>
+              <span className="diary-pill diary-pill-high">Incorrect: {totalIncorrect}</span>
             ) : null}
             {accuracy ? (
-              <span className="pill">Accuracy {accuracy}</span>
+              <span className="diary-pill">Accuracy: {accuracy}</span>
             ) : null}
             {m.percentile != null ? (
-              <span className="pill">Percentile {m.percentile}%ile</span>
+              <span className="diary-pill mock-percentile-pill">Percentile: {m.percentile}%ile</span>
             ) : null}
           </div>
 
           {/* Detailed Section Lines */}
-          <div className="meta" style={{ marginTop: "6px" }}>
+          <div className="mock-sections-detail" style={{ marginTop: "10px" }}>
             {secs.map((sec) => {
               const s = m.sections?.[sec];
               if (!s) {
                 const secScore = m[sec.toLowerCase()];
                 return (
-                  <span key={sec} className="pill">
-                    {sec}: {secScore != null ? `${secScore} pts` : "details not entered"}
-                  </span>
+                  <div key={sec} className={`mock-sec-strip tone-${sec.toLowerCase()}`}>
+                    <strong className="mock-sec-name">{sec}</strong>
+                    <span>{secScore != null ? `${secScore} pts` : "details not entered"}</span>
+                  </div>
                 );
               }
               const secAtt = s.attempted || 0;
@@ -513,20 +529,28 @@ export default function MockTests() {
               const secScore = 3 * secCor - (s.wrongNeg || 0);
 
               return (
-                <span key={sec} className="pill">
-                  {sec}: attempted {secAtt} · unattempted {secUnatt} · correct {secCor} · incorrect {secInc} · accuracy {secAcc} · score {secScore}
-                </span>
+                <div key={sec} className={`mock-sec-strip tone-${sec.toLowerCase()}`}>
+                  <strong className="mock-sec-name">{sec}</strong>
+                  <div className="mock-sec-chips">
+                    <span>Attempted: <b>{secAtt}</b></span>
+                    <span>Unattempted: <b>{secUnatt}</b></span>
+                    <span className="mock-cor">Correct: <b>{secCor}</b></span>
+                    <span className="mock-inc">Incorrect: <b>{secInc}</b></span>
+                    <span>Accuracy: <b>{secAcc}</b></span>
+                    <span className="mock-score-badge">Score: <b>{secScore} pts</b></span>
+                  </div>
+                </div>
               );
             })}
           </div>
 
           {m.loss ? (
-            <div className="tasknotes" style={{ marginTop: "7px" }}>
-              <b>What went wrong:</b> {m.loss}
+            <div className="tasknotes mock-notes" style={{ marginTop: "9px" }}>
+              <b>What went wrong / marks lost:</b> {m.loss}
             </div>
           ) : null}
           {m.action ? (
-            <div className="tasknotes" style={{ marginTop: "4px" }}>
+            <div className="tasknotes mock-notes" style={{ marginTop: "5px" }}>
               <b>Next action:</b> {m.action}
             </div>
           ) : null}
@@ -797,13 +821,32 @@ export default function MockTests() {
                       onChange={(e) => updateSectionField(sec, "wrongNoNeg", e.target.value)}
                     />
                   </div>
-                  <div>
-                    <label>Summary</label>
-                    <div className="pill" id={`${pId}Summary`}>
+                  <div style={{ gridColumn: "1 / -1", marginTop: "4px" }}>
+                    <label>Section summary & question check</label>
+                    <div className="diary-pill" id={`${pId}Summary`} style={{ display: "inline-block", padding: "6px 12px" }}>
                       {st
-                        ? `Unattempted ${st.unattempted ?? "—"} · Accuracy ${st.accuracy == null ? "—" : st.accuracy.toFixed(1) + "%"} · Score ${st.score}`
-                        : "Unattempted — · Accuracy — · Score —"}
+                        ? `Unattempted: ${st.unattempted ?? "—"} · Accuracy: ${st.accuracy == null ? "—" : st.accuracy.toFixed(1) + "%"} · Score: ${st.score} pts`
+                        : "Unattempted: — · Accuracy: — · Score: —"}
                     </div>
+                    {inp.attempted !== "" ? (() => {
+                      const att = Number(inp.attempted) || 0;
+                      const cor = Number(inp.correct) || 0;
+                      const wn = Number(inp.wrongNeg) || 0;
+                      const wnn = Number(inp.wrongNoNeg) || 0;
+                      const sum = cor + wn + wnn;
+                      if (sum === att) {
+                        return (
+                          <div className="mock-live-balance match">
+                            ✓ {sec} questions balanced: {sum} of {att} attempted accounted for
+                          </div>
+                        );
+                      }
+                      return (
+                        <div className="mock-live-balance mismatch">
+                          ⚠️ {sec}: {sum < att ? `Missing ${att - sum} question(s). Correct (${cor}) + Incorrect (${wn + wnn}) = ${sum}, but Attempted is ${att}.` : `Overcounted by ${sum - att}. Correct (${cor}) + Incorrect (${wn + wnn}) = ${sum}, but Attempted is only ${att}.`}
+                        </div>
+                      );
+                    })() : null}
                   </div>
                 </div>
               </div>
@@ -862,6 +905,33 @@ export default function MockTests() {
           />
         </div>
 
+        {/* Prominent High-Visibility Error Banner */}
+        {error ? (
+          <div id="mockFormError" className="mock-error-alert" role="alert">
+            <span className="mock-error-icon" aria-hidden="true">⚠️</span>
+            <div className="mock-error-content">
+              <strong>Unable to save test</strong>
+              <p>{error}</p>
+            </div>
+            <button
+              type="button"
+              className="mock-error-close"
+              onClick={() => setError("")}
+              aria-label="Dismiss error"
+            >
+              ✕
+            </button>
+          </div>
+        ) : null}
+
+        {/* Success Notice Banner */}
+        {notice ? (
+          <div className="mock-success-alert" role="status">
+            <span className="mock-success-icon" aria-hidden="true">✓</span>
+            <div className="mock-success-content">{notice}</div>
+          </div>
+        ) : null}
+
         {/* Form Actions */}
         <div className="formactions diary-formactions" style={{ marginTop: "14px" }}>
           <button className="primary diary-primary" type="submit" disabled={saving}>
@@ -878,63 +948,159 @@ export default function MockTests() {
         </div>
       </form>
 
-      {/* Messages */}
-      {error ? (
-        <p className="diary-feedback diary-feedback-error" role="alert" style={{ marginTop: "12px" }}>
-          {error}
-        </p>
-      ) : null}
-      {notice ? (
-        <p className="diary-feedback" role="status" style={{ marginTop: "12px" }}>
-          {notice}
-        </p>
-      ) : null}
-
       {/* SAVED FULL-LENGTH TESTS */}
-      <div className="stats-section" style={{ marginTop: "24px" }}>
-        <h3>Saved full-length tests</h3>
-        <p className="diary-muted diary-small">Full mocks are compared only with other full mocks.</p>
-        <div id="fullMockList" className="tasklist" style={{ marginTop: "10px" }}>
+      <div className="stats-section mock-section-block mock-full-block" style={{ marginTop: "28px" }}>
+        <div className="mock-section-block-head">
+          <div className="mock-section-block-title-wrap">
+            <span className="mock-sec-badge-icon icon-full" aria-hidden="true">🎯</span>
+            <div>
+              <h3 className="mock-section-block-title">Saved full-length tests</h3>
+              <p className="diary-muted diary-small">
+                3-section composite CAT mocks (VARC + DILR + Quant) compared together.
+              </p>
+            </div>
+          </div>
+          <span className="mock-count-pill pill-full">
+            {fullMocks.length} {fullMocks.length === 1 ? "mock" : "mocks"} recorded
+          </span>
+        </div>
+
+        <div id="fullMockList" className="mock-list-wrapper" style={{ marginTop: "14px" }}>
           {fullMocks.length > 0 ? (
-            fullMocks.map(renderMockCard)
+            <div className="tasklist">{fullMocks.map(renderMockCard)}</div>
           ) : (
-            <div className="empty">No full-length tests recorded yet.</div>
+            <div className="mock-empty-box mock-empty-full">
+              <div className="mock-empty-icon-wrap">
+                <span className="mock-empty-icon" aria-hidden="true">🎯</span>
+              </div>
+              <div className="mock-empty-details">
+                <h4 className="mock-empty-title">No full-length tests recorded yet</h4>
+                <p className="mock-empty-desc">
+                  Log complete 3-section CAT mock tests above to track your composite score, sectional accuracy, and percentile rank.
+                </p>
+                <span className="mock-empty-hint">
+                  💡 Tip: Select &quot;Full-length test&quot; at the top of the form to log your first full mock.
+                </span>
+              </div>
+            </div>
           )}
         </div>
       </div>
 
       {/* SAVED SECTIONAL TESTS */}
-      <div className="stats-section" style={{ marginTop: "24px" }}>
-        <h3>Saved sectional tests</h3>
-        <p className="diary-muted diary-small">
-          Each section has its own list and is compared only with the same section.
-        </p>
-
-        <h4 style={{ marginTop: "14px" }}>VARC sectionals</h4>
-        <div id="sectionalVARCList" className="tasklist mock-sublist">
-          {sectionalVARC.length > 0 ? (
-            sectionalVARC.map(renderMockCard)
-          ) : (
-            <div className="empty">No VARC sectional tests recorded yet.</div>
-          )}
+      <div className="stats-section mock-section-block" style={{ marginTop: "32px" }}>
+        <div className="mock-section-block-head">
+          <div className="mock-section-block-title-wrap">
+            <span className="mock-sec-badge-icon icon-sectional" aria-hidden="true">📊</span>
+            <div>
+              <h3 className="mock-section-block-title">Saved sectional tests</h3>
+              <p className="diary-muted diary-small">
+                Each section is tracked independently and compared only within its subject domain.
+              </p>
+            </div>
+          </div>
+          <span className="mock-count-pill pill-sectional">
+            {sectionalVARC.length + sectionalDILR.length + sectionalQuant.length} sectionals recorded
+          </span>
         </div>
 
-        <h4 style={{ marginTop: "14px" }}>DILR sectionals</h4>
-        <div id="sectionalDILRList" className="tasklist mock-sublist">
-          {sectionalDILR.length > 0 ? (
-            sectionalDILR.map(renderMockCard)
-          ) : (
-            <div className="empty">No DILR sectional tests recorded yet.</div>
-          )}
-        </div>
+        {/* 3-Column Sectional Grid */}
+        <div className="mock-sectionals-grid" style={{ marginTop: "16px" }}>
+          {/* VARC Section */}
+          <div className="mock-sec-panel mock-sec-panel-varc">
+            <div className="mock-sec-panel-head">
+              <div className="mock-sec-panel-title-area">
+                <span className="mock-sec-mini-badge badge-varc" aria-hidden="true">📖</span>
+                <div>
+                  <h4 className="mock-sec-panel-name">VARC sectionals</h4>
+                  <span className="mock-sec-panel-tag">Verbal Ability & RC · 24 Q</span>
+                </div>
+              </div>
+              <span className="mock-sec-pill pill-varc">{sectionalVARC.length} tests</span>
+            </div>
 
-        <h4 style={{ marginTop: "14px" }}>Quant sectionals</h4>
-        <div id="sectionalQuantList" className="tasklist mock-sublist">
-          {sectionalQuant.length > 0 ? (
-            sectionalQuant.map(renderMockCard)
-          ) : (
-            <div className="empty">No Quant sectional tests recorded yet.</div>
-          )}
+            <div id="sectionalVARCList" className="mock-sec-content">
+              {sectionalVARC.length > 0 ? (
+                <div className="tasklist mock-sublist">{sectionalVARC.map(renderMockCard)}</div>
+              ) : (
+                <div className="mock-empty-box mock-empty-varc">
+                  <div className="mock-empty-icon-wrap">
+                    <span className="mock-empty-icon" aria-hidden="true">📖</span>
+                  </div>
+                  <div className="mock-empty-details">
+                    <h5 className="mock-empty-title">No VARC tests yet</h5>
+                    <p className="mock-empty-desc">
+                      Log your 40-minute VARC sectionals to analyze reading speed, RC accuracy, and VA performance.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* DILR Section */}
+          <div className="mock-sec-panel mock-sec-panel-dilr">
+            <div className="mock-sec-panel-head">
+              <div className="mock-sec-panel-title-area">
+                <span className="mock-sec-mini-badge badge-dilr" aria-hidden="true">🧩</span>
+                <div>
+                  <h4 className="mock-sec-panel-name">DILR sectionals</h4>
+                  <span className="mock-sec-panel-tag">Data Interpretation & LR · 20 Q</span>
+                </div>
+              </div>
+              <span className="mock-sec-pill pill-dilr">{sectionalDILR.length} tests</span>
+            </div>
+
+            <div id="sectionalDILRList" className="mock-sec-content">
+              {sectionalDILR.length > 0 ? (
+                <div className="tasklist mock-sublist">{sectionalDILR.map(renderMockCard)}</div>
+              ) : (
+                <div className="mock-empty-box mock-empty-dilr">
+                  <div className="mock-empty-icon-wrap">
+                    <span className="mock-empty-icon" aria-hidden="true">🧩</span>
+                  </div>
+                  <div className="mock-empty-details">
+                    <h5 className="mock-empty-title">No DILR tests yet</h5>
+                    <p className="mock-empty-desc">
+                      Log your 40-minute DILR sectionals to track set selection strategy, puzzle completion, and score trends.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quant Section */}
+          <div className="mock-sec-panel mock-sec-panel-quant">
+            <div className="mock-sec-panel-head">
+              <div className="mock-sec-panel-title-area">
+                <span className="mock-sec-mini-badge badge-quant" aria-hidden="true">📐</span>
+                <div>
+                  <h4 className="mock-sec-panel-name">Quant sectionals</h4>
+                  <span className="mock-sec-panel-tag">Quantitative Aptitude · 22 Q</span>
+                </div>
+              </div>
+              <span className="mock-sec-pill pill-quant">{sectionalQuant.length} tests</span>
+            </div>
+
+            <div id="sectionalQuantList" className="mock-sec-content">
+              {sectionalQuant.length > 0 ? (
+                <div className="tasklist mock-sublist">{sectionalQuant.map(renderMockCard)}</div>
+              ) : (
+                <div className="mock-empty-box mock-empty-quant">
+                  <div className="mock-empty-icon-wrap">
+                    <span className="mock-empty-icon" aria-hidden="true">📐</span>
+                  </div>
+                  <div className="mock-empty-details">
+                    <h5 className="mock-empty-title">No Quant tests yet</h5>
+                    <p className="mock-empty-desc">
+                      Log your 40-minute QA sectionals across Arithmetic, Algebra, Geometry, and Modern Math.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

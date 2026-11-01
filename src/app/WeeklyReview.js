@@ -376,19 +376,19 @@ export default function WeeklyReview() {
         </div>
 
         <div className="week-summary-metrics">
-          <article className="week-summary-metric">
+          <article className="week-summary-metric week-metric-purple">
             <span>Tasks planned</span>
             <strong id="weekTasksTotal">{weekTasks.length}</strong>
             <small id="weekTasksDateNote">{formatDate(start)} – {formatDate(end)}</small>
           </article>
 
-          <article className="week-summary-metric">
+          <article className="week-summary-metric week-metric-green">
             <span>Tasks completed</span>
             <strong id="weekTasksDone">{done}</strong>
             <small id="weekTasksDoneNote">{Math.max(0, weekTasks.length - done)} not marked Done</small>
           </article>
 
-          <article className="week-summary-metric">
+          <article className="week-summary-metric week-metric-blue">
             <span>Completion rate</span>
             <strong id="weekCompletionRate">{rate}%</strong>
             <div className="week-summary-progress">
@@ -396,7 +396,7 @@ export default function WeeklyReview() {
             </div>
           </article>
 
-          <article className="week-summary-metric">
+          <article className="week-summary-metric week-metric-orange">
             <span>Recorded study time</span>
             <strong id="weekStudyTime">{formatMinutes(totalMinutes)}</strong>
             <small id="weekStudyTimeNote">
@@ -416,10 +416,10 @@ export default function WeeklyReview() {
           </div>
 
           <div className="week-comparison-grid">
-            <article className="week-comparison-item">
+            <article className="week-comparison-item week-comp-pink">
               <span>This week vs last week · Completion</span>
               <strong id="weekCompletionChange">
-                {prevTasks.length ? `${rateDiff > 0 ? `+${rateDiff}` : rateDiff} percentage points` : "—"}
+                {prevTasks.length ? `${rateDiff > 0 ? `+${rateDiff}%` : `${rateDiff}%`}` : "—"}
               </strong>
               <small id="weekCompletionComparisonNote">
                 {prevTasks.length
@@ -428,7 +428,7 @@ export default function WeeklyReview() {
               </small>
             </article>
 
-            <article className="week-comparison-item">
+            <article className="week-comparison-item week-comp-indigo">
               <span>This week vs last week · Study time</span>
               <strong id="weekTimeChange">
                 {prevTasks.length

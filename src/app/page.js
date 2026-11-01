@@ -982,10 +982,10 @@ function DailyDiary({ user, onSignOut }) {
         ) : (
           <>
             <section className="diary-stats" aria-label="Daily task statistics">
-              <div className="diary-stat"><small>Tasks today</small><strong>{dayTasks.length}</strong></div>
-              <div className="diary-stat"><small>Completed today</small><strong>{completed}</strong></div>
-              <div className="diary-stat"><small>Completion</small><strong>{completion}%</strong></div>
-              <div className="diary-stat"><small>Focused hours today</small><strong id="hoursToday">{reflection.hours !== "" && reflection.hours != null ? reflection.hours : "0"}</strong></div>
+              <div className="diary-stat diary-stat-purple"><small>Tasks today</small><strong>{dayTasks.length}</strong></div>
+              <div className="diary-stat diary-stat-green"><small>Completed today</small><strong>{completed}</strong></div>
+              <div className="diary-stat diary-stat-blue"><small>Completion</small><strong>{completion}%</strong></div>
+              <div className="diary-stat diary-stat-orange"><small>Focused hours today</small><strong id="hoursToday">{reflection.hours !== "" && reflection.hours != null ? reflection.hours : "0"}</strong></div>
             </section>
 
             <section className="diary-panel">

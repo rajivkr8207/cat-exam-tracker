@@ -446,7 +446,7 @@ export default function MonthlyReview() {
         </div>
 
         <div className="month-summary-metrics">
-          <article className="month-summary-metric">
+          <article className="month-summary-metric month-metric-purple">
             <span>Tasks planned</span>
             <strong id="monthTasksTotal">{monthTasks.length}</strong>
             <small id="monthTasksDateNote">
@@ -454,7 +454,7 @@ export default function MonthlyReview() {
             </small>
           </article>
 
-          <article className="month-summary-metric">
+          <article className="month-summary-metric month-metric-green">
             <span>Tasks completed</span>
             <strong id="monthTasksDone">{done}</strong>
             <small id="monthTasksDoneNote">
@@ -462,7 +462,7 @@ export default function MonthlyReview() {
             </small>
           </article>
 
-          <article className="month-summary-metric">
+          <article className="month-summary-metric month-metric-blue">
             <span>Completion rate</span>
             <strong id="monthCompletionRate">{rate}%</strong>
             <div className="month-summary-progress">
@@ -470,7 +470,7 @@ export default function MonthlyReview() {
             </div>
           </article>
 
-          <article className="month-summary-metric">
+          <article className="month-summary-metric month-metric-orange">
             <span>Study time</span>
             <strong id="monthStudyTime">{formatMinutes(totalMinutes)}</strong>
             <small id="monthStudyTimeNote">
@@ -483,7 +483,7 @@ export default function MonthlyReview() {
             </small>
           </article>
 
-          <article className="month-summary-metric">
+          <article className="month-summary-metric month-metric-indigo">
             <span>Mocks recorded</span>
             <strong id="monthMockCount">0</strong>
             <small>From your Mock tab</small>
@@ -498,11 +498,11 @@ export default function MonthlyReview() {
           </div>
 
           <div className="month-comparison-grid">
-            <article className="month-comparison-item">
+            <article className="month-comparison-item month-comp-green">
               <span>Completion rate</span>
               <strong id="monthCompletionChange">
                 {prevTasks.length
-                  ? `${rateDiff > 0 ? `+${rateDiff}` : rateDiff} percentage points`
+                  ? `${rateDiff > 0 ? `+${rateDiff}%` : `${rateDiff}%`}`
                   : "—"}
               </strong>
               <small id="monthCompletionComparisonNote">
@@ -512,7 +512,7 @@ export default function MonthlyReview() {
               </small>
             </article>
 
-            <article className="month-comparison-item">
+            <article className="month-comparison-item month-comp-orange">
               <span>Study time</span>
               <strong id="monthTimeChange">
                 {prevTasks.length
@@ -526,7 +526,7 @@ export default function MonthlyReview() {
               </small>
             </article>
 
-            <article className="month-comparison-item">
+            <article className="month-comparison-item month-comp-pink">
               <span>Mock activity</span>
               <strong id="monthMockChange">—</strong>
               <small id="monthMockComparisonNote">No mock records for either month yet.</small>
