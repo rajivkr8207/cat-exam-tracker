@@ -343,17 +343,16 @@ function DailyDiary({ user, onSignOut }) {
     event.preventDefault();
     setError("");
     setNotice("");
-
     const startTime = normalizeTime(form.startTime);
     const endTime = normalizeTime(form.endTime);
-    if (startTime === null) {
-      setError("Enter start time like 07:00 AM or 12:30 PM.");
-      return;
-    }
-    if (endTime === null) {
-      setError("Enter end time like 09:00 AM or 01:30 PM.");
-      return;
-    }
+    // if (startTime === null) {
+    //   setError("Enter start time like 07:00 AM or 12:30 PM.");
+    //   return;
+    // }
+    // if (endTime === null) {
+    //   setError("Enter end time like 09:00 AM or 01:30 PM.");
+    //   return;
+    // }
     if (startTime && endTime && timeToMinutes(endTime) <= timeToMinutes(startTime)) {
       setError("End time must be later than start time.");
       return;
@@ -366,7 +365,6 @@ function DailyDiary({ user, onSignOut }) {
       setError("Correct answers cannot exceed questions attempted.");
       return;
     }
-
     const payload = toApiPayload({ ...form, startTime, endTime }, selectedDate);
     let savedTask = null;
     setSaving(true);
@@ -1028,7 +1026,7 @@ function DailyDiary({ user, onSignOut }) {
                 <div className="diary-formgrid">
                   <div className="diary-wide">
                     <label htmlFor="taskTitle">Task *</label>
-                    <input id="taskTitle" name="title" required maxLength={300} value={form.title} onChange={updateField} placeholder="e.g., Solve 15 Time & Work questions and review errors" />
+                    <input id="taskTitle" name="title" required className="outline-red-500  " maxLength={300} value={form.title} onChange={updateField} placeholder="e.g., Solve 15 Time & Work questions and review errors" />
                   </div>
                   <div>
                     <label htmlFor="taskSection">Section</label>

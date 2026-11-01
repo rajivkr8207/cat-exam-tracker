@@ -265,11 +265,17 @@
 .diary-auth-card input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #cfd6e4;
+  /* border: 1px solid #cfd6e4; */
   border-radius: 9px;
   background: #fff;
   color: var(--diary-ink);
   font: inherit;
+}
+
+.diary-formgrid input:focus,
+.diary-formgrid textarea:focus,
+.diary-formgrid select:focus {
+  outline: 1px solid red;
 }
 
 .cat-diary textarea {
