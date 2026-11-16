@@ -242,12 +242,53 @@ export default function TopicDashboard() {
     const { name, value } = e.target;
     setSessionForm((prev) => {
       const next = { ...prev, [name]: value };
-      const tot = Number(name === "total" ? value : next.total);
-      const att = Number(name === "attempted" ? value : next.attempted);
-      const cor = Number(name === "correct" ? value : next.correct);
-      if (!isNaN(tot) && !isNaN(att) && !isNaN(cor) && tot >= 1 && att >= 0 && att <= tot && cor >= 0 && cor <= att) {
-        next.incorrect = String(att - cor);
-        next.unattempted = String(tot - att);
+      const total = Number(next.total);
+      const correct = Number(next.correct);
+
+      if (name === "incorrect" && value !== "" && next.correct !== "" && next.total !== "") {
+        const incorrect = Number(value);
+        const attempted = correct + incorrect;
+        if (
+          Number.isInteger(total) &&
+          total >= 1 &&
+          Number.isInteger(correct) &&
+          correct >= 0 &&
+          Number.isInteger(incorrect) &&
+          incorrect >= 0 &&
+          attempted <= total
+        ) {
+          next.attempted = String(attempted);
+          next.unattempted = String(total - attempted);
+        }
+      } else if (name === "unattempted" && value !== "" && next.correct !== "" && next.total !== "") {
+        const unattempted = Number(value);
+        const attempted = total - unattempted;
+        if (
+          Number.isInteger(total) &&
+          total >= 1 &&
+          Number.isInteger(unattempted) &&
+          unattempted >= 0 &&
+          attempted >= correct &&
+          attempted <= total
+        ) {
+          next.attempted = String(attempted);
+          next.incorrect = String(attempted - correct);
+        }
+      } else if (next.total !== "" && next.attempted !== "" && next.correct !== "") {
+        const attempted = Number(next.attempted);
+        if (
+          Number.isInteger(total) &&
+          total >= 1 &&
+          Number.isInteger(attempted) &&
+          attempted >= 0 &&
+          attempted <= total &&
+          Number.isInteger(correct) &&
+          correct >= 0 &&
+          correct <= attempted
+        ) {
+          next.incorrect = String(attempted - correct);
+          next.unattempted = String(total - attempted);
+        }
       }
       return next;
     });
@@ -755,6 +796,7 @@ export default function TopicDashboard() {
                 name="attempted"
                 type="number"
                 min="0"
+                max={sessionForm.total}
                 step="1"
                 required
                 value={sessionForm.attempted}
@@ -768,6 +810,7 @@ export default function TopicDashboard() {
                 name="correct"
                 type="number"
                 min="0"
+                max={sessionForm.attempted}
                 step="1"
                 required
                 value={sessionForm.correct}
@@ -775,23 +818,31 @@ export default function TopicDashboard() {
               />
             </div>
             <div>
-              <label htmlFor="tdIncorrectInput">Incorrect answers</label>
+              <label htmlFor="tdIncorrectInput">Incorrect answers *</label>
               <input
                 id="tdIncorrectInput"
                 name="incorrect"
                 type="number"
-                readOnly
+                min="0"
+                max={Math.max(0, (Number(sessionForm.total) || 0) - (Number(sessionForm.correct) || 0))}
+                step="1"
+                required
                 value={sessionForm.incorrect}
+                onChange={updateSessionField}
               />
             </div>
             <div>
-              <label htmlFor="tdUnattemptedInput">Unattempted</label>
+              <label htmlFor="tdUnattemptedInput">Unattempted *</label>
               <input
                 id="tdUnattemptedInput"
                 name="unattempted"
                 type="number"
-                readOnly
+                min="0"
+                max={Math.max(0, (Number(sessionForm.total) || 0) - (Number(sessionForm.correct) || 0))}
+                step="1"
+                required
                 value={sessionForm.unattempted}
+                onChange={updateSessionField}
               />
             </div>
             <div>
